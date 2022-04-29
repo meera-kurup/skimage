@@ -39,6 +39,14 @@ def smart_resize(input_image, new_size):
 		crop_box = ((width-height)//2, 0, (width-height)//2 + height, height)
 		return input_image.resize(size = (new_size,new_size),box = crop_box)
 
+def get_labels_from_folder_names():
+	"""
+	Extracts all the labels names from the image directory names 
+	"""
+	root='./../data/'
+	labels = [ item for item in os.listdir(root) if os.path.isdir(os.path.join(root, item)) ]
+	return labels
+
 
 def get_data(file_path):
 	"""
@@ -66,7 +74,8 @@ def get_data(file_path):
 	unpickled_file = unpickle(file_path)
 	inputs = unpickled_file[b'data']
 	inputs = [smart_resize(input_image, image_size) for input_image in inputs]
-	labels = unpickled_file[b'labels']
+	# labels = unpickled_file[b'labels']
+	labels = get_labels_from_folder_names()
 	num_classes = len(labels)
 
 	# Getting all labels that are for food images

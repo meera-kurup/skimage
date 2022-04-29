@@ -41,8 +41,7 @@ def train(model, train_inputs, train_labels):
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
         
     return model.loss_list
-
-
+    
 @av.test_func
 def test(model, test_inputs, test_labels):
     """
