@@ -7,7 +7,6 @@ unzip upmcfood101.zip
 # this cleans up the zip file, as we will no longer use it
 rm umcfood101.zip
 # move to data folder
-mkdir data
-mv upmcfood101 data
+mv images data
 
 echo downloaded data
