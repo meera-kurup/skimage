@@ -42,7 +42,7 @@ def train(model, train_inputs, train_labels):
         
     return model.loss_list
     
-@av.test_func
+
 def test(model, test_inputs, test_labels):
     """
     Tests the model on the test inputs and labels. You should NOT randomly 
@@ -69,8 +69,6 @@ def visualize_loss(losses):
     Uses Matplotlib to visualize the losses of our model.
     :param losses: list of loss data stored from train. Can use the model's loss_list 
     field 
-
-    NOTE: DO NOT EDIT
 
     :return: doesn't return anything, a plot should pop-up 
     """

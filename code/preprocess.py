@@ -17,6 +17,10 @@ def unpickle(file):
 	:param file: the file to unpickle
 	:return: dictionary of unpickled data
 	"""
+	images = []
+	labels = []
+
+	
 	with open(file, 'rb') as fo:
 		dict = pickle.load(fo, encoding='bytes')
 	return dict
@@ -41,7 +45,7 @@ def smart_resize(input_image, new_size):
 
 def get_labels_from_folder_names():
 	"""
-	Extracts all the labels names from the image directory names 
+	Extracts all the label names from the image folder names 
 	"""
 	root='./../data/'
 	labels = [ item for item in os.listdir(root) if os.path.isdir(os.path.join(root, item)) ]
