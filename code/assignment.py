@@ -1,133 +1,113 @@
+from preprocess import *
+from model import *
+from matplotlib import pyplot as plt
 import os
-import numpy as np
 import tensorflow as tf
 import numpy as np
-from preprocess import *
 import sys
 import random
+import math
 
 
-def train(model, train_french, train_english, eng_padding_index):
-    """
-    Runs through one epoch - all training examples.
+def train(model, train_inputs, train_labels):
+    '''
+    Trains the model on all of the inputs and labels for one epoch. You should shuffle your inputs 
+    and labels - ensure that they are shuffled in the same order using tf.gather or zipping.
+    To increase accuracy, you may want to use tf.image.random_flip_left_right on your
+    inputs before doing the forward pass. You should batch your inputs.
+    
+    :param model: the initialized model to use for the forward pass and backward pass
+    :param train_inputs: train inputs (all inputs to use for training), 
+    shape (num_inputs, width, height, num_channels)
+    :param train_labels: train labels (all labels to use for training), 
+    shape (num_labels, num_classes)
+    :return: Optionally list of losses per batch to use for visualize_loss
+    '''
 
-    :param model: the initialized model to use for forward and backward pass
-    :param train_french: French train data (all data for training) of shape (num_sentences, window_size)
-    :param train_english: English train data (all data for training) of shape (num_sentences, window_size + 1)
-    :param eng_padding_index: the padding index, the id of *PAD* token. This integer is used when masking padding labels.
-    :return: None
-    """
-
-    # NOTE: For each training step, you should pass in the French sentences to be used by the encoder,
-    # and English sentences to be used by the decoder
-    # - The English sentences passed to the decoder have the last token in the window removed:
-    #	 [STOP CS147 is the best class. STOP *PAD*] --> [STOP CS147 is the best class. STOP]
-    #
-    # - When computing loss, the decoder labels should have the first word removed:
-    #	 [STOP CS147 is the best class. STOP] --> [CS147 is the best class. STOP]
-
-    # calculate values
-    num_batches = int(len(train_french)/model.batch_size)
-    trim_size = (len(train_french) % model.batch_size)
-    # shuffle
-    rnd_ind = tf.random.shuffle(list(range(len(train_french))))
-    rnd_encoder = tf.gather(train_french, rnd_ind)
-    rnd_decoder = tf.gather(train_english, rnd_ind)
-
-    # reshape
-    rnd_encoder = tf.reshape(rnd_encoder[:-trim_size], (num_batches, model.batch_size, rnd_encoder.shape[1]))
-    rnd_decoder = tf.reshape(rnd_decoder[:-trim_size], (num_batches, model.batch_size, rnd_decoder.shape[1]))
-
+    train_inputs = tf.image.random_flip_left_right(train_inputs)
+    indicies = tf.random.shuffle(list(range(0, len(train_inputs))))
+    train_inputs_shuffled = tf.gather(train_inputs, indicies)
+    train_labels_shuffled = tf.gather(train_labels, indicies)
+    num_batches = int(len(train_inputs)/model.batch_size)
     for b in range(num_batches):
-        print(str(b)+"/"+str(num_batches-1))
+        batch_inputs = train_inputs_shuffled[model.batch_size*b: model.batch_size*(b+1)][:]
+        batch_labels = train_labels_shuffled[model.batch_size*b: model.batch_size*(b+1)]
+
         with tf.GradientTape() as tape:
-            mask = rnd_decoder[b][:,1:] != eng_padding_index
-            y_pred = model.call(rnd_encoder[b], rnd_decoder[b][:,:-1])
-            
-            num_symbols = np.sum(mask)
-            loss = model.loss_function(y_pred, rnd_decoder[b][:,1:], mask)/num_symbols#what to add for mask arg
+            y_pred = model.call(batch_inputs)
+            loss = model.loss(y_pred, batch_labels)
+            model.loss_list.append(loss)
         gradients = tape.gradient(loss, model.trainable_variables)
-        model.optimizer.apply_gradients(
-            zip(gradients, model.trainable_variables))
+        model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+        
+    return model.loss_list
+
 
 @av.test_func
-def test(model, test_french, test_english, eng_padding_index):
+def test(model, test_inputs, test_labels):
     """
-    Runs through one epoch - all testing examples.
-
-    :param model: the initialized model to use for forward and backward pass
-    :param test_french: French test data (all data for testing) of shape (num_sentences, window_size)
-    :param test_english: English test data (all data for testing) of shape (num_sentences, window_size + 1)
-    :param eng_padding_index: the padding index, the id of *PAD* token. This integer is used when masking padding labels.
-    :returns: a tuple containing at index 0 the perplexity of the test set and at index 1 the per symbol accuracy on test set,
-    e.g. (my_perplexity, my_accuracy)
+    Tests the model on the test inputs and labels. You should NOT randomly 
+    flip images or do any extra preprocessing.
+    
+    :param test_inputs: test data (all images to be tested), 
+    shape (num_inputs, width, height, num_channels)
+    :param test_labels: test labels (all corresponding labels),
+    shape (num_labels, num_classes)
+    :return: test accuracy - this should be the average accuracy across
+    all batches
     """
+    model_accuracy = 0
+    for i in range(0, len(test_inputs), model.batch_size):
+        input_batches = test_inputs[i:i+model.batch_size,:]
+        label_batches = test_labels[i:i+model.batch_size,:]
+        logits = model.call(input_batches)
+        model_accuracy += model.accuracy(logits, label_batches)
+    batch_num = int(len(test_inputs)) / model.batch_size
+    return float(model_accuracy/batch_num)
 
-    # Note: Follow the same procedure as in train() to construct batches of data!
-    total_loss = 0
-    total_accuracy = 0
-    count = 0
-    num_batches = int(len(test_french)/model.batch_size)
-    trim_size = (len(test_french) % model.batch_size)
- 
-    rnd_encoder = tf.reshape(test_french[:-trim_size], (num_batches, model.batch_size, test_french.shape[1]))
-    rnd_decoder = tf.reshape(test_english[:-trim_size], (num_batches, model.batch_size, test_english.shape[1]))
+def visualize_loss(losses): 
+    """
+    Uses Matplotlib to visualize the losses of our model.
+    :param losses: list of loss data stored from train. Can use the model's loss_list 
+    field 
 
- 
-    for b in range(num_batches):
-        print(str(b)+"/"+str(num_batches-1))
-        labels = rnd_decoder[b][:,1:]
-        mask = labels != eng_padding_index
-        num_symbols = np.sum(mask)
-        
-        y_pred = model.call(rnd_encoder[b], rnd_decoder[b][:,:-1])
-        
-        total_loss += model.loss_function(y_pred, labels, mask)
-        total_accuracy +=  model.accuracy_function(y_pred, labels, mask) * num_symbols
-        count += np.count_nonzero(mask)
-  
-    total_symbols = np.sum(np.where(test_english[0:num_batches*model.batch_size, 1:] == eng_padding_index, 0,1))
-    my_perplexity = float(tf.math.exp(total_loss/total_symbols))
-    my_accuracy = float((total_accuracy/ total_symbols))
-    return (my_perplexity, my_accuracy)
+    NOTE: DO NOT EDIT
+
+    :return: doesn't return anything, a plot should pop-up 
+    """
+    x = [i for i in range(len(losses))]
+    plt.plot(x, losses)
+    plt.title('Loss per batch')
+    plt.xlabel('Batch')
+    plt.ylabel('Loss')
+    plt.show()
+
 
 def main():
+    '''
+    Read in CIFAR10 data (limited to 2 classes), initialize your model, and train and 
+    test your model for a number of epochs. We recommend that you train for
+    10 epochs and at most 25 epochs. 
+    
+    CS1470 students should receive a final accuracy 
+    on the testing examples for cat and dog of >=70%.
+    
+    CS2470 students should receive a final accuracy 
+    on the testing examples for cat and dog of >=75%.
+    
+    :return: None
+    '''
+    train_inputs, train_labels = get_data("../data/train")
+    test_inputs, test_labels = get_data("../data/test")
 
-    model_types = {"RNN": RNN_Seq2Seq, "TRANSFORMER": Transformer_Seq2Seq}
-    if len(sys.argv) != 2 or sys.argv[1] not in model_types.keys():
-        print("USAGE: python assignment.py <Model Type>")
-        print("<Model Type>: [RNN/TRANSFORMER]")
-        exit()
+    model = Model()
+    epochs = 10
+    for e in range(epochs):
+        print("epoch: " + str(e+1) + "/10")
+        train(model, train_inputs, train_labels)
 
-    # Change this to "True" to turn on the attention matrix visualization.
-    # You should turn this on once you feel your code is working.
-    # Note that it is designed to work with transformers that have single attention heads.
-    if sys.argv[1] == "TRANSFORMER":
-        av.setup_visualization(enable=False)
+    test(model, test_inputs, test_labels)
 
-    print("Running preprocessing...")
-    data_dir = '../../data'
-    file_names = ('fls.txt', 'els.txt', 'flt.txt', 'elt.txt')
-    print("hi")
-    file_paths = [f'{data_dir}/{fname}' for fname in file_names]
-    train_eng, test_eng, train_frn, test_frn, vocab_eng, vocab_frn, eng_padding_index = get_data(*file_paths)
-    print("Preprocessing complete.")
-
-    model = model_types[sys.argv[1]](FRENCH_WINDOW_SIZE, len(
-        vocab_frn), ENGLISH_WINDOW_SIZE, len(vocab_eng))
-
-    # TODO:
-    # Train and Test Model for 1 epoch.
-    for i in range(1):
-        train(model, train_frn, train_eng, eng_padding_index)
-
-    for i in range(1):
-        test(model, test_frn, test_eng, eng_padding_index)
-
-    # Visualize a sample attention matrix from the test set
-    # Only takes effect if you enabled visualizations above
-    av.show_atten_heatmap()
-
-
-if __name__ == '__main__':
-    main()
+    visualize_loss(model.loss_list)
+    
+    return
