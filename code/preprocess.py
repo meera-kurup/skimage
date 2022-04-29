@@ -17,10 +17,6 @@ def unpickle(file):
 	:param file: the file to unpickle
 	:return: dictionary of unpickled data
 	"""
-	images = []
-	labels = []
-
-	
 	with open(file, 'rb') as fo:
 		dict = pickle.load(fo, encoding='bytes')
 	return dict
