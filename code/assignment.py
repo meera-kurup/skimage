@@ -24,24 +24,27 @@ def train(model, train_inputs, train_labels):
     :return: Optionally list of losses per batch to use for visualize_loss
     '''
 
-    #train_inputs = tf.image.random_flip_left_right(train_inputs)
-    # indicies = tf.random.shuffle(list(range(0, len(train_inputs))))
-    # train_inputs_shuffled = tf.gather(train_inputs, indicies)
-    # train_labels_shuffled = tf.gather(train_labels, indicies)
+    train_inputs = tf.image.random_flip_left_right(train_inputs)
+    indicies = tf.random.shuffle(range(train_labels.shape[0]))
+    train_inputs_shuffled = tf.gather(train_inputs, indicies)
+    train_labels_shuffled = tf.gather(train_labels, indicies)
     num_batches = int(len(train_inputs)/model.batch_size)
 
     print("Entering Training")
     for b in range(num_batches):
-        batch_inputs = train_inputs[model.batch_size*b: model.batch_size*(b+1)][:]
-        batch_labels = train_labels[model.batch_size*b: model.batch_size*(b+1)]
+        batch_inputs = train_inputs_shuffled[model.batch_size*b: model.batch_size*(b+1)][:]
+        batch_labels = train_labels_shuffled[model.batch_size*b: model.batch_size*(b+1)]
 
         with tf.GradientTape() as tape:
             y_pred = model.call(batch_inputs)
             loss = model.loss(y_pred, batch_labels)
+            print(loss)
             model.loss_list.append(loss)
+            accuracy = model.accuracy(y_pred, batch_labels)
         
         if b % 100 == 0:
             print("Loss after {} training steps: {}".format(b, loss))
+            print("Accuracy after {} training steps: {}".format(b, accuracy))
         
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
