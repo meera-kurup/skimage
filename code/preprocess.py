@@ -1,54 +1,35 @@
-import pickle
 import numpy as np
 import tensorflow as tf
-import os
 from PIL import Image
 
 # May need more functions for preprocessing 
 
-def unpickle(file):
-	"""
-	CIFAR data contains the files data_batch_1, data_batch_2, ..., 
-	as well as test_batch. We have combined all train batches into one
-	batch for you. Each of these files is a Python "pickled" 
-	object produced with cPickle. The code below will open up a 
-	"pickled" object (each file) and return a dictionary.
+# def smart_resize(input_image, new_size):
+# 	"""
+# 	Resizes and crops given image to a square with a width of new_size
+# 	"""
+# 	width = input_image.width
+# 	height = input_image.height
 
-	:param file: the file to unpickle
-	:return: dictionary of unpickled data
-	"""
-	with open(file, 'rb') as fo:
-		dict = pickle.load(fo, encoding='bytes')
-	return dict
+# 	# Image is portrait or square
+# 	if height >= width:
+# 		crop_box = (0, (height-width)//2, width, (height-width)//2 + width)
+# 		return input_image.resize(size = (new_size,new_size),box = crop_box)
 
+# 	# Image is landscape
+# 	if width > height:
+# 		crop_box = ((width-height)//2, 0, (width-height)//2 + height, height)
+# 		return input_image.resize(size = (new_size,new_size),box = crop_box)
 
-def smart_resize(input_image, new_size):
-	"""
-	Resizes and crops given image to a square with a width of new_size
-	"""
-	width = input_image.width
-	height = input_image.height
+# def get_labels_from_folder_names():
+# 	"""
+# 	Extracts all the label names from the image folder names 
+# 	"""
+# 	root='./../data/'
+# 	labels = [ item for item in os.listdir(root) if os.path.isdir(os.path.join(root, item)) ]
+# 	return labels
 
-	# Image is portrait or square
-	if height >= width:
-		crop_box = (0, (height-width)//2, width, (height-width)//2 + width)
-		return input_image.resize(size = (new_size,new_size),box = crop_box)
-
-	# Image is landscape
-	if width > height:
-		crop_box = ((width-height)//2, 0, (width-height)//2 + height, height)
-		return input_image.resize(size = (new_size,new_size),box = crop_box)
-
-def get_labels_from_folder_names():
-	"""
-	Extracts all the label names from the image folder names 
-	"""
-	root='./../data/'
-	labels = [ item for item in os.listdir(root) if os.path.isdir(os.path.join(root, item)) ]
-	return labels
-
-
-def get_data(file_path):
+def get_data(train_img_file, train_labels_file, test_img_file, test_labels_file):
 	"""
 	Given a file path and two target classes, returns an array of 
 	normalized inputs (images) and an array of labels. 
@@ -71,22 +52,37 @@ def get_data(file_path):
 	num_classes = 0sses)
 	"""
 	image_size = 32
-	unpickled_file = unpickle(file_path)
-	inputs = unpickled_file[b'data']
-	inputs = [smart_resize(input_image, image_size) for input_image in inputs]
-	# labels = unpickled_file[b'labels']
-	labels = get_labels_from_folder_names()
-	num_classes = len(labels)
+	# unpickled_file = unpickle(file_path)
+	# inputs = unpickled_file[b'data']
+	# inputs = [smart_resize(input_image, image_size) for input_image in inputs]
+	# # labels = unpickled_file[b'labels']
+	# labels = get_labels_from_folder_names()
+	print("Loading training data...")
+	train_inputs = np.load(train_img_file)
+	train_labels = np.load(train_labels_file)
+	print("Loading testing data...")
+	test_inputs = np.load(test_img_file)
+	test_labels = np.load(test_labels_file)
 
 	# Getting all labels that are for food images
-	labels = np.array(labels)
+	# labels = np.array(labels)
 
 	# Reshape and transpose inputs
 	# inputs = tf.reshape(inputs, (-1, 3)) #, 32 ,32))
 	# inputs = tf.transpose(inputs, perm=[0,2,3,1])
-	inputs = np.float32(inputs/255)
+	train_inputs = np.float32(train_inputs/255)
+	test_inputs = np.float32(test_inputs/255)
 
 	# One-hot encoding for labels 
-	labels = tf.one_hot(labels, 2)
+	d_str = np.unique(train_labels)
+	# label_dict = dict(enumerate(d_str.flatten(), 0))
+	label_dict = dict(zip(d_str.flatten(), range(len(d_str))))
+	print(label_dict)
 
-	return inputs, labels
+	num_classes = len(label_dict)
+
+	train_labels = tf.one_hot(np.vectorize(label_dict.get)(train_labels), num_classes)
+	test_labels = tf.one_hot(np.vectorize(label_dict.get)(test_labels), num_classes)
+
+	# print(train_labels.shape)
+	return train_inputs, test_inputs, train_labels, test_labels, label_dict

@@ -15,37 +15,44 @@ class Model(tf.keras.Model):
         ### CNN ###
         self.cnn = tf.keras.Sequential([
             # CONVOLUTION LAYERS
-            tf.keras.layers.Conv2D(256, (3, 3), activation='relu', input_shape=(32, 32, 3)),
-            # tf.keras.layers.Conv2D(256, (3, 3), activation='relu', input_shape=(32, 32, 3)),
+            tf.keras.layers.Conv2D(64, (3, 3), padding = "same", activation='relu'),
             tf.keras.layers.MaxPooling2D((2, 2)),
             tf.keras.layers.Dropout(0.2),
-            tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
-            # tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
+
+            tf.keras.layers.Conv2D(128, (3, 3), padding = "same", activation='relu'),
+            tf.keras.layers.Conv2D(128, (3, 3), padding = "same", activation='relu'),
             tf.keras.layers.MaxPooling2D((2, 2)),
             tf.keras.layers.Dropout(0.2),
-            tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
-            # tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+
+            tf.keras.layers.Conv2D(256, (3, 3), padding = "same", activation='relu'),
+            tf.keras.layers.Conv2D(256, (3, 3), padding = "same", activation='relu'),
+            tf.keras.layers.Conv2D(256, (3, 3), padding = "same", activation='relu'),
             tf.keras.layers.MaxPooling2D((2,2)),
             tf.keras.layers.Dropout(0.2),
-            tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
-            # tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
-            tf.keras.layers.GlobalAveragePooling2D(),
+            
+            # tf.keras.layers.Conv2D(128, (3, 3), activation='relu'),
+            
+            # tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+           
+            # tf.keras.layers.Conv2D(32, (5, 5), activation='relu'),
+            # tf.keras.layers.Conv2D(32, (5, 5), activation='relu'),
+            # tf.keras.layers.GlobalAveragePooling2D(),
+
             # DENSE LAYERS
             tf.keras.layers.Flatten(),
             tf.keras.layers.Dense(100, activation='relu'),
-            tf.keras.layers.Dropout(0.3),
-            tf.keras.layers.Dense(60, activation='relu'),
-            tf.keras.layers.Dropout(0.3),
-            tf.keras.layers.Dense(30, activation='relu'),
-            tf.keras.layers.Dropout(0.3),
-            tf.keras.layers.Dense(10, activation='relu'),
-            tf.keras.layers.Dropout(0.3),
+            tf.keras.layers.Dropout(0.2),
+            # tf.keras.layers.Dense(60, activation='relu'),
+            # tf.keras.layers.Dropout(0.2),
+            # tf.keras.layers.Dense(30, activation='relu'),
+            # tf.keras.layers.Dropout(0.2),
+            # tf.keras.layers.Dense(10, activation='relu'),
+            # tf.keras.layers.Dropout(0.2),
             tf.keras.layers.Dense(self.num_classes, activation='softmax')
         ])
         
     @tf.function
-    def call(self):
-
+    def call(self, input):
         # Running forward pass
         output = self.cnn(input)
         return output
