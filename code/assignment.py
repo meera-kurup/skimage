@@ -106,7 +106,7 @@ def main():
     
     :return: None
     '''
-    inputs, labels, label_dict = get_data("../imgs.npy", "../labels.npy")
+    inputs, labels, label_dict = get_data("../data/imgs.npy", "../data/labels.npy")
     print(inputs)
     #print(labels)
 
