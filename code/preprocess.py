@@ -77,11 +77,24 @@ def get_data(train_img_file, train_labels_file, test_img_file, test_labels_file)
 	d_str = np.unique(train_labels)
 	# label_dict = dict(enumerate(d_str.flatten(), 0))
 	label_dict = dict(zip(d_str.flatten(), range(len(d_str))))
-	print(label_dict)
 
 	num_classes = len(label_dict)
 
-	train_labels = tf.one_hot(np.vectorize(label_dict.get)(train_labels), num_classes)
+	first_class = 11
+	second_class = 21
+	train_labels = np.vectorize(label_dict.get)(train_labels)
+	indicies_1 = np.nonzero(train_labels == first_class)
+	indicies_2 = np.nonzero(train_labels == second_class)
+	indicies = np.concatenate([indicies_1[0], indicies_2[0]])
+	train_inputs = np.float32(train_inputs[indicies]/255)
+	train_labels = train_labels[indicies]
+	train_inputs = tf.reshape(train_inputs, (-1, 3, 299, 299))
+	train_inputs = tf.transpose(train_inputs, perm=[0,2,3,1])
+	train_labels = np.where(train_labels == first_class, 0, 1)
+
+	train_labels = tf.one_hot(train_labels, 2)
+
+	# train_labels = tf.one_hot(np.vectorize(label_dict.get)(train_labels), num_classes)
 	test_labels = tf.one_hot(np.vectorize(label_dict.get)(test_labels), num_classes)
 
 	# print(train_labels.shape)
