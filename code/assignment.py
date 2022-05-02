@@ -106,7 +106,9 @@ def main():
     
     :return: None
     '''
-    train_inputs, test_inputs, train_labels, test_labels, label_dict = get_data("../data/train_data.npy", "../data/train_labels.npy", "../data/test_data.npy", "../data/test_labels.npy")
+    inputs, labels, label_dict = get_data("../imgs.npy", "../labels.npy")
+    print(inputs)
+    #print(labels)
 
     model = Model(2)
     # print(len(label_dict))
@@ -114,9 +116,9 @@ def main():
     print("Training...")
     for e in range(epochs):
         print("Epoch: " + str(e+1) + "/" + str(epochs))
-        train(model, train_inputs, train_labels)
+        train(model, inputs, labels)
 
-    test(model, test_inputs, test_labels)
+    # test(model, test_inputs, test_labels)
 
     # visualize_loss(model.loss_list)
 
