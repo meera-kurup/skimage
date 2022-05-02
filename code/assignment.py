@@ -109,8 +109,8 @@ def main():
     inputs, labels, label_dict = get_data("../data/imgs.npy", "../data/labels.npy")
     print(inputs)
     #print(labels)
-
-    model = Model(2)
+    num_classes = len(label_dict)
+    model = Model(num_classes)
     # print(len(label_dict))
     epochs = 10
     print("Training...")
