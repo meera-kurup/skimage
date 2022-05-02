@@ -24,15 +24,14 @@ def train(model, train_inputs, train_labels):
     :return: Optionally list of losses per batch to use for visualize_loss
     '''
 
-    train_inputs = tf.image.random_flip_left_right(train_inputs)
-    indicies = tf.random.shuffle(range(train_labels.shape[0]))
+    # train_inputs = tf.image.random_flip_left_right(train_inputs)
+    indicies = tf.random.shuffle(range(len(train_labels)))
     train_inputs_shuffled = tf.gather(train_inputs, indicies)
     train_labels_shuffled = tf.gather(train_labels, indicies)
     num_batches = int(len(train_inputs)/model.batch_size)
 
-    print("Entering Training")
     for b in range(num_batches):
-        batch_inputs = train_inputs_shuffled[model.batch_size*b: model.batch_size*(b+1)][:]
+        batch_inputs = train_inputs_shuffled[model.batch_size*b: model.batch_size*(b+1)]
         batch_labels = train_labels_shuffled[model.batch_size*b: model.batch_size*(b+1)]
 
         with tf.GradientTape() as tape:
@@ -48,8 +47,6 @@ def train(model, train_inputs, train_labels):
         
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
-        
-    print("Done Training")
 
     return model.loss_list
 
@@ -75,7 +72,7 @@ def test(model, test_inputs, test_labels):
         model_accuracy += model.accuracy(logits, label_batches)
     batch_num = int(len(test_inputs)) / model.batch_size
     loss = float(model_accuracy/batch_num)
-    print("Test Loss: " + loss)
+    print("Test Loss: " + str(loss))
     print("Done Test")
     return loss
 
@@ -109,19 +106,19 @@ def main():
     
     :return: None
     '''
-    train_inputs, test_inputs, train_labels, test_labels, label_dict = get_data("../data/train_data.npy", "../data/train_labels.npy", "../data/test_data.npy", "../data/test_labels.npy")
+    inputs, labels, label_dict = get_data("../data/imgs.npy", "../data/labels.npy")
+    print(inputs)
+    #print(labels)
 
-    model = Model(len(label_dict))
+    model = Model(2)
     epochs = 10
-    #randomize
-    set_size = len(train_labels)//epochs
     
     print("Training...")
-    for k in range(epochs):
-        print("Epoch: " + str(k+1) + "/" + str(epochs))
-        train(model, train_inputs[k*set_size:(k+1)*set_size][:], train_labels[k*set_size:(k+1)*set_size])
+    for e in range(epochs):
+        print("Epoch: " + str(e+1) + "/" + str(epochs))
+        train(model, inputs, labels)
 
-    test(model, test_inputs, test_labels)
+    # test(model, test_inputs, test_labels)
 
     # visualize_loss(model.loss_list)
 

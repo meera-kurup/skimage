@@ -29,7 +29,7 @@ from PIL import Image
 # 	labels = [ item for item in os.listdir(root) if os.path.isdir(os.path.join(root, item)) ]
 # 	return labels
 
-def get_data(train_img_file, train_labels_file, test_img_file, test_labels_file):
+def get_data(img_file, labels_file):
 	"""
 	Given a file path and two target classes, returns an array of 
 	normalized inputs (images) and an array of labels. 
@@ -57,12 +57,12 @@ def get_data(train_img_file, train_labels_file, test_img_file, test_labels_file)
 	# inputs = [smart_resize(input_image, image_size) for input_image in inputs]
 	# # labels = unpickled_file[b'labels']
 	# labels = get_labels_from_folder_names()
-	print("Loading training data...")
-	train_inputs = np.load(train_img_file)
-	train_labels = np.load(train_labels_file)
-	print("Loading testing data...")
-	test_inputs = np.load(test_img_file)
-	test_labels = np.load(test_labels_file)
+	print("Loading data...")
+	inputs = np.load(img_file)
+	labels = np.load(labels_file)
+	# print("Loading testing data...")
+	# test_inputs = np.load(test_img_file)
+	# test_labels = np.load(test_labels_file)
 
 	# Getting all labels that are for food images
 	# labels = np.array(labels)
@@ -70,19 +70,31 @@ def get_data(train_img_file, train_labels_file, test_img_file, test_labels_file)
 	# Reshape and transpose inputs
 	# inputs = tf.reshape(inputs, (-1, 3)) #, 32 ,32))
 	# inputs = tf.transpose(inputs, perm=[0,2,3,1])
-	train_inputs = np.float32(train_inputs/255)
-	test_inputs = np.float32(test_inputs/255)
+	inputs = np.float32(inputs/255)
+	# test_inputs = np.float32(test_inputs/255)
 
 	# One-hot encoding for labels 
-	d_str = np.unique(train_labels)
+	d_str = np.unique(labels)
 	# label_dict = dict(enumerate(d_str.flatten(), 0))
 	label_dict = dict(zip(d_str.flatten(), range(len(d_str))))
-	# print(label_dict)
-
 	num_classes = len(label_dict)
 
-	train_labels = tf.one_hot(np.vectorize(label_dict.get)(train_labels), num_classes)
-	test_labels = tf.one_hot(np.vectorize(label_dict.get)(test_labels), num_classes)
+	# first_class = 11
+	# second_class = 21
+	# train_labels = np.vectorize(label_dict.get)(train_labels)
+	# indicies_1 = np.nonzero(train_labels == first_class)
+	# indicies_2 = np.nonzero(train_labels == second_class)
+	# indicies = np.concatenate([indicies_1[0], indicies_2[0]])
+	# train_inputs = np.float32(train_inputs[indicies]/255)
+	# train_labels = train_labels[indicies]
+	# train_inputs = tf.reshape(train_inputs, (-1, 3, 299, 299))
+	# train_inputs = tf.transpose(train_inputs, perm=[0,2,3,1])
+	# train_labels = np.where(train_labels == first_class, 0, 1)
+
+	# labels = tf.one_hot(labels, num_classes)
+
+	labels = tf.one_hot(np.vectorize(label_dict.get)(labels), num_classes)
+	# test_labels = tf.one_hot(np.vectorize(label_dict.get)(test_labels), num_classes)
 
 	# print(train_labels.shape)
-	return train_inputs, test_inputs, train_labels, test_labels, label_dict
+	return inputs, labels, label_dict
