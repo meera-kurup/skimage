@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPool2D, GlobalAveragePooling2D, BatchNormalization
+from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPool2D, GlobalAveragePooling2D, BatchNormalization, AveragePooling2D
 from keras.applications.inception_v3 import InceptionV3
 
 class Model(tf.keras.Model):
@@ -13,6 +13,19 @@ class Model(tf.keras.Model):
         self.loss_list = []
         self.learning_rate = 0.001
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
+
+        # ### CNN from New Paper ###
+        # self.cnn = tf.keras.Sequential([
+        #     InceptionV3(weights='imagenet', include_top=False, input_tensor=(299,299,3)),
+        #     AveragePooling2D(pool_size=(8,8)),
+        #     Conv2D(filters = 299, kernel_size = (299,3),padding = 'Same', activation ='relu'),
+        #     MaxPool2D(pool_size=(2,2)),
+        #     #concat
+        #     Dropout(0.4),
+        #     #fully connected 
+        #     Dense(self.num_classes, activation = "softmax")
+        # ])
+
         
         ### CNN ###
         self.cnn = tf.keras.Sequential([
