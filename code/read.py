@@ -36,7 +36,7 @@ for subdir, dirs, files in os.walk("../data/images/"):
         i.close()
         count += 1
     if count % 1000 == 0:
-        print("Processed" + str(count) + "Images")
+        print("Processed " + str(count) + " Images")
 print("Saving data...")
 np.save('../data/labels', np.array(labels))
 np.save('../data/imgs', np.array(images))
