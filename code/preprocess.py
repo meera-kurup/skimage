@@ -51,7 +51,7 @@ def get_data(train_img_file, train_labels_file, test_img_file, test_labels_file)
 	has size (num_examples, num_cl
 	num_classes = 0sses)
 	"""
-	image_size = 32
+	image_size = 256
 	# unpickled_file = unpickle(file_path)
 	# inputs = unpickled_file[b'data']
 	# inputs = [smart_resize(input_image, image_size) for input_image in inputs]
@@ -77,7 +77,7 @@ def get_data(train_img_file, train_labels_file, test_img_file, test_labels_file)
 	d_str = np.unique(train_labels)
 	# label_dict = dict(enumerate(d_str.flatten(), 0))
 	label_dict = dict(zip(d_str.flatten(), range(len(d_str))))
-	print(label_dict)
+	# print(label_dict)
 
 	num_classes = len(label_dict)
 

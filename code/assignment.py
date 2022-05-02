@@ -38,7 +38,7 @@ def train(model, train_inputs, train_labels):
         with tf.GradientTape() as tape:
             y_pred = model.call(batch_inputs)
             loss = model.loss(y_pred, batch_labels)
-            print(loss)
+            # print(loss)
             model.loss_list.append(loss)
             accuracy = model.accuracy(y_pred, batch_labels)
         
@@ -112,12 +112,14 @@ def main():
     train_inputs, test_inputs, train_labels, test_labels, label_dict = get_data("../data/train_data.npy", "../data/train_labels.npy", "../data/test_data.npy", "../data/test_labels.npy")
 
     model = Model(len(label_dict))
-    # print(len(label_dict))
     epochs = 10
+    #randomize
+    set_size = len(train_labels)//epochs
+    
     print("Training...")
-    for e in range(epochs):
-        print("Epoch: " + str(e+1) + "/" + str(epochs))
-        train(model, train_inputs, train_labels)
+    for k in range(epochs):
+        print("Epoch: " + str(k+1) + "/" + str(epochs))
+        train(model, train_inputs[k*set_size:(k+1)*set_size][:], train_labels[k*set_size:(k+1)*set_size])
 
     test(model, test_inputs, test_labels)
 
