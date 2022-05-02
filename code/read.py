@@ -38,8 +38,8 @@ for subdir, dirs, files in os.walk("../data/images/"):
     if count % 1000 == 0:
         print("Processed" + str(count) + "Images")
 print("Saving data...")
-np.save('../labels', np.array(labels))
-np.save('../imgs', np.array(images))
+np.save('../data/labels', np.array(labels))
+np.save('../data/imgs', np.array(images))
 train_labels = None
 train_iamges = None
 
