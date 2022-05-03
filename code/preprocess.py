@@ -1,7 +1,6 @@
 import numpy as np
 import tensorflow as tf
 from PIL import Image
-
 # May need more functions for preprocessing 
 
 # def smart_resize(input_image, new_size):
@@ -58,7 +57,13 @@ def get_data(img_file, labels_file):
 	# # labels = unpickled_file[b'labels']
 	# labels = get_labels_from_folder_names()
 	print("Loading data...")
-	inputs = np.array(np.load(img_file, allow_pickle=True), dtype= np.float32)
+	inputs = np.array(np.load(img_file, allow_pickle=True))
+ 
+ 
+	print(inputs.shape)
+	# for i in range(len(inputs)):
+	# 	img = Image.fromarray(inputs[i], 'RGB')
+	# 	img.show()
 	labels = np.load(labels_file, allow_pickle=True)
 	# print("Loading testing data...")
 	# test_inputs = np.load(test_img_file)

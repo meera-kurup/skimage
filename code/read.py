@@ -17,8 +17,8 @@ for subdir, dirs, files in os.walk("../data/images/"):
         label = subdir.split('/')[-1]
         labels.append(label)
         i = Image.open(os.path.join(subdir, file))
-        # i.thumbnail(maxsize, Image.ANTIALIAS)
-
+        i.thumbnail(maxsize, Image.ANTIALIAS)
+        
         width, height = i.size   # Get dimensions
         left = (width - img_len)/2
         top = (height - img_len)/2
@@ -40,6 +40,30 @@ for subdir, dirs, files in os.walk("../data/images/"):
 print("Saving data...")
 np.save('../data/labels', np.array(labels))
 np.save('../data/imgs', np.array(images))
-train_labels = None
-train_iamges = None
+# train_labels = None
+# train_iamges = None
+
+# print("Reading testing data...")
+# for subdir, dirs, files in os.walk("../data/test/"):
+#     for file in files:
+#         test_label = subdir.split('/')[-1]
+#         test_labels.append(test_label)
+#         i = Image.open(os.path.join(subdir, file))
+#         i.thumbnail(maxsize, Image.ANTIALIAS)
+        
+#         width, height = i.size   # Get dimensions
+#         left = (width - img_len)/2
+#         top = (height - img_len)/2
+#         right = (width + img_len)/2
+#         bottom = (height + img_len)/2
+
+#         # Crop the center of the image
+#         i = i.crop((left, top, right, bottom))
+#         test_images.append(np.array(i))
+#         # print(label, np.array(i))
+#         i.close()
+
+# print("Saving testing data...")
+# np.save('../data/test_labels', np.array(test_labels))
+# np.save('../data/test_data', np.array(test_images))
 print("DONE")
