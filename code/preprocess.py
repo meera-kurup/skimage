@@ -57,13 +57,7 @@ def get_data(img_file, labels_file):
 	# # labels = unpickled_file[b'labels']
 	# labels = get_labels_from_folder_names()
 	print("Loading data...")
-	inputs = np.array(np.load(img_file, allow_pickle=True))
- 
- 
-	print(inputs.shape)
-	# for i in range(len(inputs)):
-	# 	img = Image.fromarray(inputs[i], 'RGB')
-	# 	img.show()
+	inputs = np.load(img_file, allow_pickle=True)
 	labels = np.load(labels_file, allow_pickle=True)
 	# print("Loading testing data...")
 	# test_inputs = np.load(test_img_file)
@@ -82,7 +76,25 @@ def get_data(img_file, labels_file):
 	d_str = np.unique(labels)
 	# label_dict = dict(enumerate(d_str.flatten(), 0))
 	label_dict = dict(zip(d_str.flatten(), range(len(d_str))))
-	num_classes = len(label_dict)
+
+	# num_classes = len(label_dict)
+
+	first_class = 11
+	second_class = 21
+	third_class = 31
+
+	labels = np.vectorize(label_dict.get)(labels)
+	processed_labels = labels[((labels == first_class) | (labels == second_class)) | (labels == third_class)]
+	temp_labels = np.where(processed_labels == second_class, 1, 0)
+	temp_labels2 = np.where(processed_labels == third_class, 2, 0)
+	processed_labels = np.add(temp_labels, temp_labels2)
+	one_hot = tf.one_hot(processed_labels, depth=3)
+
+	processed_inputs = inputs[((labels == first_class) | (labels == second_class)) | (labels == third_class)]
+	processed_inputs = processed_inputs/255
+	processed_inputs = tf.reshape(processed_inputs, (-1, 3, 32, 32))
+	processed_inputs = tf.transpose(processed_inputs, perm=[0,2,3,1])
+	processed_inputs = tf.dtypes.cast(processed_inputs, tf.float32)
 
 	# first_class = 11
 	# second_class = 21
@@ -98,8 +110,7 @@ def get_data(img_file, labels_file):
 
 	# labels = tf.one_hot(labels, num_classes)
 
-	labels = tf.one_hot(np.vectorize(label_dict.get)(labels), num_classes)
+	# labels = tf.one_hot(np.vectorize(label_dict.get)(labels), num_classes)
 	# test_labels = tf.one_hot(np.vectorize(label_dict.get)(test_labels), num_classes)
 
-	# print(train_labels.shape)
-	return inputs, labels, label_dict
+	return processed_inputs, one_hot

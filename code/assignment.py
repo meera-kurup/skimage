@@ -32,10 +32,13 @@ def train(model, train_inputs, train_labels):
 
     for b in range(num_batches):
         batch_inputs = train_inputs_shuffled[model.batch_size*b: model.batch_size*(b+1)]
+        batch_inputs = tf.image.random_flip_left_right(batch_inputs)
         batch_labels = train_labels_shuffled[model.batch_size*b: model.batch_size*(b+1)]
 
         with tf.GradientTape() as tape:
             y_pred = model.call(batch_inputs)
+            # print(y_pred.shape)
+            # print(batch_labels.shape)
             loss = model.loss(y_pred, batch_labels)
             # print(loss)
             model.loss_list.append(loss)
@@ -106,13 +109,13 @@ def main():
     
     :return: None
     '''
-    inputs, labels, label_dict = get_data("../data/imgs.npy", "../data/labels.npy")
+    inputs, labels = get_data("../data/imgs.npy", "../data/labels.npy")
     #print(labels)
-    num_classes = len(label_dict)
+    # num_classes = len(label_dict)
+    num_classes = 3
     model = Model(num_classes)
     # print(len(label_dict))
-    epochs = 10
-    
+    epochs = 50
     print("Training...")
     for e in range(epochs):
         print("Epoch: " + str(e+1) + "/" + str(epochs))
