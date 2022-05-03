@@ -86,8 +86,10 @@ def get_data(img_file, labels_file):
 
 	labels = np.vectorize(label_dict.get)(labels)
 	processed_labels = labels[((labels == first_class) | (labels == second_class)) | (labels == third_class)]
-	processed_labels = np.where(processed_labels == first_class, 0, 1)
-	one_hot = tf.one_hot(processed_labels, 2, 1, 0, dtype=tf.float32)
+	temp_labels = np.where(processed_labels == second_class, 1, 0)
+	temp_labels2 = np.where(processed_labels == third_class, 2, 0)
+	processed_labels = np.add(temp_labels, temp_labels2)
+	one_hot = tf.one_hot(processed_labels, depth=3, dtype=tf.float32)
 
 	processed_inputs = inputs[((labels == first_class) | (labels == second_class)) | (labels == third_class)]
 	processed_inputs = processed_inputs/255
