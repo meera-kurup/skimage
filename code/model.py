@@ -31,10 +31,10 @@ class Model(tf.keras.Model):
         self.cnn = tf.keras.Sequential([
             Conv2D(16, (3, 3), input_shape=(32, 32, 3), activation='relu'),
             MaxPool2D(pool_size=(2,2)),
-            # Conv2D(16, (3, 3), activation = 'relu'),
-            # MaxPool2D(pool_size=(2,2)),
-            # Flatten(),
-            # Dense(128, activation='relu'),
+            Conv2D(16, (3, 3), activation = 'relu'),
+            MaxPool2D(pool_size=(2,2)),
+            Flatten(),
+            Dense(128, activation='relu'),
             Dense(num_classes)])
         # 1D or 2D Max pooling?
         # train for more epochs

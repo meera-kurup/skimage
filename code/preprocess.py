@@ -79,6 +79,7 @@ def get_data(img_file, labels_file):
 	label_dict = dict(zip(d_str.flatten(), range(len(d_str))))
 
 	num_classes = len(label_dict)
+	num_classes = 3
 
 	# first_class = 11
 	# second_class = 21
