@@ -75,7 +75,7 @@ class Model(tf.keras.Model):
         # self.cnn.add(tf.keras.layers.Flatten())
         # self.cnn.add(tf.keras.layers.Dense(256, activation='relu'))
         # self.cnn.add(tf.keras.layers.Dense(128, activation='relu'))
-        # self.cnn.add(tf.keras.layers.Dense(self.num_classes, activation='softmax'))
+        # self.cnn.add(tf.keras.layers.Dense(self.num_classes))
 
     @tf.function
     def call(self, input):
