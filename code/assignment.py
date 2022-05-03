@@ -114,10 +114,9 @@ def main():
     num_classes = 3
     model = Model(num_classes)
     # print(len(label_dict))
-    epochs = 20
+    epochs = 50
     print("Training...")
     inputs = inputs[:3000, :, :, :]
-    labels = labels[:3000]
     print(inputs.shape)
     for e in range(epochs):
         print("Epoch: " + str(e+1) + "/" + str(epochs))
