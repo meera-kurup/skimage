@@ -109,12 +109,13 @@ def main():
     inputs, labels, label_dict = get_data("../data/imgs.npy", "../data/labels.npy")
     #print(labels)
     num_classes = len(label_dict)
+    num_classes = 3
     model = Model(num_classes)
     # print(len(label_dict))
     epochs = 20
     print("Training...")
-    inputs = inputs[:2000, :, :, :]
-    labels = labels[:2000]
+    inputs = inputs[:3000, :, :, :]
+    labels = labels[:3000]
     print(inputs.shape)
     for e in range(epochs):
         print("Epoch: " + str(e+1) + "/" + str(epochs))
