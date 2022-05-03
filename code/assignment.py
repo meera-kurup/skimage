@@ -107,7 +107,6 @@ def main():
     :return: None
     '''
     inputs, labels, label_dict = get_data("../data/imgs.npy", "../data/labels.npy")
-    print(inputs)
     #print(labels)
     num_classes = len(label_dict)
     model = Model(num_classes)
