@@ -9,7 +9,7 @@ class Model(tf.keras.Model):
         
         ### HYPERPARAMETERS ###
         self.num_classes = num_classes
-        self.batch_size = 100
+        self.batch_size = 64
         self.loss_list = []
         self.learning_rate = 0.001
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
@@ -29,43 +29,52 @@ class Model(tf.keras.Model):
         
         ### CNN ###
         self.cnn = tf.keras.Sequential([
-            # Conv2D(16, (3, 3), input_shape=(32, 32, 3), activation='relu'),
-            # MaxPool2D(pool_size=(2,2)),
-            # Conv2D(16, (3, 3), activation = 'relu'),
-            # MaxPool2D(pool_size=(2,2)),
-
-            # Flatten(),
-            # Dense(128, activation='relu'),
-            # Dense(num_classes, activation = 'softmax')
-
-            # CONVOLUTION LAYERS
-            # InceptionV3(weights='imagenet', include_top=False, input_tensor=(299,299,3)),
-
-            Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
-            Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
+            Conv2D(16, (3, 3), input_shape=(32, 32, 3), activation='relu'),
             MaxPool2D(pool_size=(2,2)),
-            BatchNormalization(),
-            Dropout(0.4),
-
-            Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'),
-            Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'), 
+            Conv2D(16, (3, 3), activation = 'relu'),
             MaxPool2D(pool_size=(2,2)),
-            BatchNormalization(),
-            Dropout(0.4),
-
-            Conv2D(filters = 128, kernel_size = (2,2),padding = 'Same', activation ='relu'),
-            Conv2D(filters = 128, kernel_size = (2,2),padding = 'Same', activation ='relu'),
-            MaxPool2D(pool_size=(2,2)),
-            BatchNormalization(),
-            Dropout(0.4),
-
-            GlobalAveragePooling2D(),
             Flatten(),
-            Dense(512, activation='relu'),
-            Dropout(0.4),
-            Dense(self.num_classes, activation = "softmax"),
-        ])
-        
+            Dense(128, activation='relu'),
+            Dense(num_classes, activation = 'softmax')])
+
+        #     # CONVOLUTION LAYERS
+        #     # InceptionV3(weights='imagenet', include_top=False, input_tensor=(299,299,3)),
+
+        #     Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
+        #     Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
+        #     MaxPool2D(pool_size=(2,2)),
+        #     BatchNormalization(),
+        #     Dropout(0.4),
+
+        #     Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'),
+        #     Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'), 
+        #     MaxPool2D(pool_size=(2,2)),
+        #     BatchNormalization(),
+        #     Dropout(0.4),
+
+        #     Conv2D(filters = 128, kernel_size = (2,2),padding = 'Same', activation ='relu'),
+        #     Conv2D(filters = 128, kernel_size = (2,2),padding = 'Same', activation ='relu'),
+        #     MaxPool2D(pool_size=(2,2)),
+        #     BatchNormalization(),
+        #     Dropout(0.4),
+
+        #     GlobalAveragePooling2D(),
+        #     Flatten(),
+        #     Dense(512, activation='relu'),
+        #     Dropout(0.4),
+        #     Dense(self.num_classes, activation = "softmax"),
+        # ])
+
+        # self.cnn = tf.keras.Sequential()
+        # self.cnn.add(tf.keras.layers.Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(32,32,3)))
+        # self.cnn.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
+        # self.cnn.add(tf.keras.layers.Conv2D(64, kernel_size=(3, 3), activation='relu'))
+        # self.cnn.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
+        # self.cnn.add(tf.keras.layers.Flatten())
+        # self.cnn.add(tf.keras.layers.Dense(256, activation='relu'))
+        # self.cnn.add(tf.keras.layers.Dense(128, activation='relu'))
+        # self.cnn.add(tf.keras.layers.Dense(self.num_classes, activation='softmax'))
+
     @tf.function
     def call(self, input):
         # Running forward pass

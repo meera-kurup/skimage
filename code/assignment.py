@@ -111,8 +111,11 @@ def main():
     num_classes = len(label_dict)
     model = Model(num_classes)
     # print(len(label_dict))
-    epochs = 10
+    epochs = 20
     print("Training...")
+    inputs = inputs[:2000, :, :, :]
+    labels = labels[:2000]
+    print(inputs.shape)
     for e in range(epochs):
         print("Epoch: " + str(e+1) + "/" + str(epochs))
         train(model, inputs, labels)
