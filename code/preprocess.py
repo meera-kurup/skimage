@@ -58,8 +58,8 @@ def get_data(img_file, labels_file):
 	# # labels = unpickled_file[b'labels']
 	# labels = get_labels_from_folder_names()
 	print("Loading data...")
-	inputs = np.load(img_file)
-	labels = np.load(labels_file)
+	inputs = np.load(img_file, allow_pickle=True)
+	labels = np.load(labels_file, allow_pickle=True)
 	# print("Loading testing data...")
 	# test_inputs = np.load(test_img_file)
 	# test_labels = np.load(test_labels_file)
