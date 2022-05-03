@@ -33,7 +33,6 @@ def train(model, train_inputs, train_labels):
     for b in range(num_batches):
         batch_inputs = train_inputs_shuffled[model.batch_size*b: model.batch_size*(b+1)]
         batch_labels = train_labels_shuffled[model.batch_size*b: model.batch_size*(b+1)]
-        print(batch_labels)
 
         with tf.GradientTape() as tape:
             y_pred = model.call(batch_inputs)
