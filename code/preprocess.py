@@ -78,9 +78,22 @@ def get_data(img_file, labels_file):
 	# label_dict = dict(enumerate(d_str.flatten(), 0))
 	label_dict = dict(zip(d_str.flatten(), range(len(d_str))))
 
-	num_classes = len(label_dict)
-	labels = labels[:3000]
-	num_classes = 3
+	# num_classes = len(label_dict)
+
+	first_class = 11
+	second_class = 21
+	third_class = 31
+
+	labels = np.vectorize(label_dict.get)(labels)
+	processed_labels = labels[((labels == first_class) | (labels == second_class)) | (labels == third_class)]
+	processed_labels = np.where(processed_labels == first_class, 0, 1)
+	one_hot = tf.one_hot(processed_labels, 2, 1, 0, dtype=tf.float32)
+
+	processed_inputs = inputs[((labels == first_class) | (labels == second_class)) | (labels == third_class)]
+	processed_inputs = processed_inputs/255
+	processed_inputs = tf.reshape(processed_inputs, (-1, 3, 32, 32))
+	processed_inputs = tf.transpose(processed_inputs, perm=[0,2,3,1])
+	processed_inputs = tf.dtypes.cast(processed_inputs, tf.float32)
 
 	# first_class = 11
 	# second_class = 21
@@ -96,8 +109,7 @@ def get_data(img_file, labels_file):
 
 	# labels = tf.one_hot(labels, num_classes)
 
-	labels = tf.one_hot(np.vectorize(label_dict.get)(labels), num_classes)
+	# labels = tf.one_hot(np.vectorize(label_dict.get)(labels), num_classes)
 	# test_labels = tf.one_hot(np.vectorize(label_dict.get)(test_labels), num_classes)
 
-	# print(train_labels.shape)
-	return inputs, labels, label_dict
+	return processed_inputs, one_hot
