@@ -9,7 +9,7 @@ class Model(tf.keras.Model):
         
         ### HYPERPARAMETERS ###
         self.num_classes = num_classes
-        self.batch_size = 75
+        self.batch_size = 100
         self.loss_list = []
         self.learning_rate = 0.001
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
