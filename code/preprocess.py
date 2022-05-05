@@ -70,9 +70,10 @@ def get_data(img_file, labels_file):
 	# Reshape and transpose inputs
 	# inputs = tf.reshape(inputs, (-1, 3)) #, 32 ,32))
 	# inputs = tf.transpose(inputs, perm=[0,2,3,1])
+	img = Image.fromarray(inputs[0], 'RGB')
+	img.show()
 	inputs = inputs/255
 	# test_inputs = np.float32(test_inputs/255)
-
 	# One-hot encoding for labels 
 	d_str = np.unique(labels)
 	# label_dict = dict(enumerate(d_str.flatten(), 0))
@@ -80,9 +81,9 @@ def get_data(img_file, labels_file):
 
 	# num_classes = len(label_dict)
 
-	first_class = 11
-	second_class = 21
-	third_class = 31
+	first_class = 1
+	second_class = 2
+	third_class = 3
 
 	labels = np.vectorize(label_dict.get)(labels)
 	processed_labels = labels[((labels == first_class) | (labels == second_class)) | (labels == third_class)]
