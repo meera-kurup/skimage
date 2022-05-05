@@ -81,9 +81,9 @@ def get_data(img_file, labels_file):
 
 	# num_classes = len(label_dict)
 
-	first_class = 1
-	second_class = 2
-	third_class = 3
+	first_class = 0
+	second_class = 1
+	third_class = 2
 
 	labels = np.vectorize(label_dict.get)(labels)
 	processed_labels = labels[((labels == first_class) | (labels == second_class)) | (labels == third_class)]

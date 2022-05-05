@@ -13,6 +13,7 @@ class Model(tf.keras.Model):
         self.loss_list = []
         self.learning_rate = 0.0001
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
+        # self.optimizer = tf.keras.optimizers.RMSprop(learning_rate=self.learning_rate)
 
         # ### CNN from New Paper ###
         # self.cnn = tf.keras.Sequential([
