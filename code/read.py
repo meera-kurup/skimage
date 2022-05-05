@@ -7,7 +7,7 @@ images = []
 
 # test_labels = []
 # test_images = []
-img_len = 32
+img_len = 299
 maxsize = (img_len, img_len)
 
 print("Reading data...")
