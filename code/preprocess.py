@@ -51,7 +51,7 @@ def get_data(img_file, labels_file):
 	has size (num_examples, num_cl
 	num_classes = 0sses)
 	"""
-	image_size = 299
+	image_size = 32
 	# unpickled_file = unpickle(file_path)
 	# inputs = unpickled_file[b'data']
 	# inputs = [smart_resize(input_image, image_size) for input_image in inputs]
@@ -94,7 +94,7 @@ def get_data(img_file, labels_file):
 
 	processed_inputs = inputs[((labels == first_class) | (labels == second_class)) | (labels == third_class)]
 	processed_inputs = np.array(processed_inputs/255)
-	processed_inputs = np.reshape(processed_inputs, (-1, 3, image_size, image_size))
+	processed_inputs = tf.reshape(processed_inputs, (-1, 3, image_size, image_size))
 	processed_inputs = tf.transpose(processed_inputs, perm=[0,2,3,1])
 	processed_inputs = tf.dtypes.cast(processed_inputs, tf.float32)
 
