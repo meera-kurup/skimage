@@ -93,7 +93,7 @@ def get_data(img_file, labels_file):
 	one_hot = tf.one_hot(processed_labels, depth=3)
 
 	processed_inputs = inputs[((labels == first_class) | (labels == second_class)) | (labels == third_class)]
-	processed_inputs = processed_inputs/255
+	processed_inputs = np.array(processed_inputs/255)
 	processed_inputs = np.reshape(processed_inputs, (-1, 3, image_size, image_size))
 	processed_inputs = tf.transpose(processed_inputs, perm=[0,2,3,1])
 	processed_inputs = tf.dtypes.cast(processed_inputs, tf.float32)
