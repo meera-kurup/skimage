@@ -51,7 +51,7 @@ def get_data(img_file, labels_file):
 	has size (num_examples, num_cl
 	num_classes = 0sses)
 	"""
-	image_size = 32
+	image_size = 299
 	# unpickled_file = unpickle(file_path)
 	# inputs = unpickled_file[b'data']
 	# inputs = [smart_resize(input_image, image_size) for input_image in inputs]
