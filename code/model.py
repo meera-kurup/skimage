@@ -18,7 +18,7 @@ class Model(tf.keras.Model):
 
         # ### CNN from New Paper ###
         self.cnn = tf.keras.Sequential([
-            InceptionV3(weights='imagenet', include_top=False, input_tensor=(image_size,image_size,3)),
+            InceptionV3(weights='imagenet', include_top=False, input_tensor=Input(shape=(image_size,image_size,3))),
             AveragePooling2D(pool_size=(8,8)),
             Conv2D(filters = image_size, kernel_size =(image_size,3),padding = 'Same', activation ='relu'),
             MaxPool2D(pool_size=(2,2)),
