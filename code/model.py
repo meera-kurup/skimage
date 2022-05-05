@@ -13,6 +13,7 @@ class Model(tf.keras.Model):
         self.loss_list = []
         self.learning_rate = 0.0001
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
+        image_size = 256
         # self.optimizer = tf.keras.optimizers.RMSprop(learning_rate=self.learning_rate)
 
         # ### CNN from New Paper ###
@@ -44,6 +45,7 @@ class Model(tf.keras.Model):
         #     # InceptionV3(weights='imagenet', include_top=False, input_tensor=(299,299,3)),
 
         self.cnn = tf.keras.Sequential([
+            InceptionV3(weights='imagenet', include_top=False, input_tensor=(image_size,image_size,3)),
             Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
             Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
             MaxPool2D(pool_size=(2,2)),
