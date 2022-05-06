@@ -15,7 +15,7 @@ class Model(tf.keras.Model):
         self.accuracy_list = []
         self.learning_rate = 0.0001
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
-        image_size = image_size
+        self.image_size = image_size
         # self.optimizer = tf.keras.optimizers.RMSprop(learning_rate=self.learning_rate)
 
         # ### CNN from New Paper ###
@@ -71,9 +71,8 @@ class Model(tf.keras.Model):
         #     Dropout(0.2),
         #     Dense(self.num_classes, activation="softmax", kernel_regularizer=l2()),
         # ])
-
         self.cnn = tf.keras.Sequential()
-        self.cnn.add(tf.keras.layers.Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(image_size,image_size,3)))
+        self.cnn.add(tf.keras.layers.Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(self.image_size,self.image_size,3)))
         self.cnn.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
         self.cnn.add(tf.keras.layers.Conv2D(64, kernel_size=(3, 3), activation='relu'))
         self.cnn.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))

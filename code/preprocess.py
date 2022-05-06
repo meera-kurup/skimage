@@ -87,7 +87,7 @@ def get_data(img_file, labels_file, image_size):
 	temp_labels3 = np.where(processed_labels == 3, 3, 0)
 	temp_labels4 = np.where(processed_labels == 4, 4, 0)
 	processed_labels = temp_labels + temp_labels2 + temp_labels3 + temp_labels4
-	one_hot = tf.one_hot(processed_labels, depth=3)
+	one_hot = tf.one_hot(processed_labels, depth=4)
 
 	processed_inputs = inputs[((labels == 0) | (labels == 1)) | (labels == 2) | (labels == 3) | (labels == 4)]
 	processed_inputs = np.array(processed_inputs/255)
