@@ -141,12 +141,12 @@ def main():
             train_inputs = inputs[1000*n:1000*n+split, :, :, :]
             test_inputs = inputs[1000*n+split: 1000*(n+1), :, :, :]
             train_labels = labels[1000*n:1000*n+split, :]
-            test_labelss = labels[1000*n+split: 1000*(n+1), :]
+            test_labels = labels[1000*n+split: 1000*(n+1), :]
         else:
-            train_inputs.append(inputs[1000*n:1000*n+split, :, :, :])
-            test_inputs.append(inputs[1000*n+split: 1000*(n+1), :, :, :])
-            train_labels.append(labels[1000*n:1000*n+split, :])
-            test_labels.append(labels[1000*n+split: 1000*(n+1), :])
+            train_inputs.concat(inputs[1000*n:1000*n+split, :, :, :], 0)
+            test_inputs.concat(inputs[1000*n+split: 1000*(n+1), :, :, :], 0)
+            train_labels.concat(labels[1000*n:1000*n+split, :], 0)
+            test_labels.concat(labels[1000*n+split: 1000*(n+1), :], 0)
 
     # for n in range(num_classes):
     #     train_inputs[0].append(train_inputs[n])
