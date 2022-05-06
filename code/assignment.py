@@ -92,15 +92,14 @@ def visualize_loss(losses):
     plt.xlabel('Batch')
     plt.ylabel('Loss')
     plt.savefig('../loss.png')
-    plt.show()
+    plt.close()
 
 def visualize_accuracy(accuracies): 
     """
-    Uses Matplotlib to visualize the losses of our model.
-    :param losses: list of loss data stored from train. Can use the model's loss_list 
-    field 
+    Uses Matplotlib to visualize the accuracies of our model.
+    :param accuracies: list of accuracy data stored from train.
 
-    :return: doesn't return anything, a plot should pop-up 
+    :return: doesn't return anything, a plot should pop-up and save.
     """
     x = [i for i in range(len(accuracies))]
     plt.plot(x, accuracies)
@@ -108,7 +107,7 @@ def visualize_accuracy(accuracies):
     plt.xlabel('Batch')
     plt.ylabel('Accuracy')
     plt.savefig('../accuracy.png')
-    plt.show()
+    plt.close()
 
 
 def main():
