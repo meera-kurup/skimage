@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPool2D, GlobalAveragePooling2D, BatchNormalization, AveragePooling2D
+from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPool2D, GlobalAveragePooling2D, BatchNormalization, AveragePooling2D, Input
 from keras.applications.inception_v3 import InceptionV3
 
 class Model(tf.keras.Model):
@@ -11,20 +11,21 @@ class Model(tf.keras.Model):
         self.num_classes = num_classes
         self.batch_size = 64
         self.loss_list = []
-        self.learning_rate = 0.001
+        self.learning_rate = 0.0001
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
+        image_size = 256
+        # self.optimizer = tf.keras.optimizers.RMSprop(learning_rate=self.learning_rate)
 
         # ### CNN from New Paper ###
-        # self.cnn = tf.keras.Sequential([
-        #     InceptionV3(weights='imagenet', include_top=False, input_tensor=(299,299,3)),
-        #     AveragePooling2D(pool_size=(8,8)),
-        #     Conv2D(filters = 299, kernel_size = (299,3),padding = 'Same', activation ='relu'),
-        #     MaxPool2D(pool_size=(2,2)),
-        #     #concat
-        #     Dropout(0.4),
-        #     #fully connected 
-        #     Dense(self.num_classes, activation = "softmax")
-        # ])
+        self.cnn = tf.keras.Sequential([
+            InceptionV3(weights='imagenet', include_top=False, input_tensor=Input(shape=(image_size,image_size,3))),
+            GlobalAveragePooling2D(),
+            Flatten(),
+            Dense(128, activation='relu'),
+            BatchNormalization(),
+            Dropout(0.4),
+            Dense(self.num_classes, activation = "softmax")
+        ])
 
         
         ### CNN ###
@@ -35,7 +36,6 @@ class Model(tf.keras.Model):
         #     MaxPool2D(pool_size=(2,2)),
         #     Flatten(),
         #     Dense(128, activation='relu'),
-        #     Dense(16, activation='relu'),
         #     Dense(num_classes)])
         # 1D or 2D Max pooling?
         # train for more epochs
@@ -43,6 +43,8 @@ class Model(tf.keras.Model):
         #     # CONVOLUTION LAYERS
         #     # InceptionV3(weights='imagenet', include_top=False, input_tensor=(299,299,3)),
 
+        # self.cnn = tf.keras.Sequential([
+        #     InceptionV3(weights='imagenet', include_top=False, input_tensor=Input(shape=(image_size, image_size, 3))),
         #     Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
         #     Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
         #     MaxPool2D(pool_size=(2,2)),
@@ -59,12 +61,45 @@ class Model(tf.keras.Model):
         #     Conv2D(filters = 128, kernel_size = (2,2),padding = 'Same', activation ='relu'),
         #     MaxPool2D(pool_size=(2,2)),
         #     BatchNormalization(),
+        #     Dropout(0.2),
+
+        #     GlobalAveragePooling2D(),
+        #     Flatten(),
+        #     Dense(128, activation='relu'),
+        #     Dropout(0.2),
+        #     Dense(self.num_classes)
+        # ])
+
+        # self.cnn = tf.keras.Sequential([
+        #     Conv2D(filters = 128, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
+        #     Conv2D(filters = 128, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
+        #     MaxPool2D(pool_size=(2,2)),
+        #     BatchNormalization(),
+        #     Dropout(0.4),
+
+        #     Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'),
+        #     Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'), 
+        #     MaxPool2D(pool_size=(2,2)),
+        #     BatchNormalization(),
+        #     Dropout(0.4),
+
+        #     Conv2D(filters = 32, kernel_size = (2,2),padding = 'Same', activation ='relu'),
+        #     Conv2D(filters = 32, kernel_size = (2,2),padding = 'Same', activation ='relu'),
+        #     MaxPool2D(pool_size=(2,2)),
+        #     BatchNormalization(),
         #     Dropout(0.4),
 
         #     GlobalAveragePooling2D(),
         #     Flatten(),
         #     Dense(512, activation='relu'),
-        #     Dropout(0.4)
+        #     Dropout(0.4),
+        #     # Flatten(),
+        #     # Dense(256, activation='relu'),
+        #     # Dropout(0.4),
+        #     # Flatten(),
+        #     # Dense(64, activation='relu'),
+        #     # Dropout(0.4),
+        #     Dense(self.num_classes)
         # ])
 
         # self.cnn = tf.keras.Sequential()
