@@ -95,39 +95,6 @@ def visualize(title, list):
     plt.savefig('../results/' + title + "_" + timestamp + '.png')
     plt.close()
 
-def visualize_loss(losses): 
-    """
-    Uses Matplotlib to visualize the losses of our model.
-    :param losses: list of loss data stored from train.
-
-    :return: doesn't return anything, a plot should pop-up and save.
-    """
-    x = [i for i in range(len(losses))]
-    plt.plot(x, losses)
-    plt.title('Loss per batch')
-    plt.xlabel('Batch')
-    plt.ylabel('Loss')
-    timestamp = time.strftime("%Y%m%d_%H%M%S")
-    plt.savefig('../results/loss' + timestamp + '.png')
-    plt.close()
-
-def visualize_accuracy(accuracies): 
-    """
-    Uses Matplotlib to visualize the accuracies of our model.
-    :param accuracies: list of accuracy data stored from train.
-
-    :return: doesn't return anything, a plot should pop-up and save.
-    """
-    x = [i for i in range(len(accuracies))]
-    plt.plot(x, accuracies)
-    plt.title('Accuracy per batch')
-    plt.xlabel('Batch')
-    plt.ylabel('Accuracy')
-    timestamp = time.strftime("%Y%m%d_%H%M%S")
-    plt.savefig('../results/accuracy' + timestamp + '.png')
-    plt.close()
-
-
 def main():
     '''
     Read in data (limited to 5 classes), initialize model, and train and 
@@ -138,10 +105,7 @@ def main():
     image_size = 128
     num_classes = 5
 
-
     inputs, labels = get_data("../data/imgs.npy", "../data/labels.npy", image_size)
-    #print(labels)
-    # num_classes = len(label_dict)
 
     # Split inputs into train and test data
     split = 750
@@ -170,8 +134,6 @@ def main():
         train(model, train_inputs, train_labels)
 
     # Save graphs in results folder
-    # visualize_loss(model.loss_list)
-    # visualize_accuracy(model.accuracy_list)
     visualize("loss", model.loss_list)
     visualize("accuracy", model.accuracy_list)
 
