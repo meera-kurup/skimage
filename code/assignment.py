@@ -130,7 +130,7 @@ def main():
     num_classes = 3
     model = Model(num_classes)
     # print(len(label_dict))
-    epochs = 1
+    epochs = 50
     print("Training...")
     for e in range(epochs):
         print("Epoch: " + str(e+1) + "/" + str(epochs))
