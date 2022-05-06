@@ -43,6 +43,7 @@ def train(model, train_inputs, train_labels):
             # print(loss)
             model.loss_list.append(loss)
             accuracy = model.accuracy(y_pred, batch_labels)
+            model.accuracy_list.append(accuracy)
         
         if b % 50 == 0:
             print("Loss after {} training steps: {}".format(b, loss))
@@ -80,11 +81,10 @@ def test(model, test_inputs, test_labels):
 
 def visualize_loss(losses): 
     """
-    Uses Matplotlib to visualize the losses of our model.
-    :param losses: list of loss data stored from train. Can use the model's loss_list 
-    field 
+    Uses Matplotlib to visualize the losses/accuracies of our model.
+    :param losses: list of loss/accuracy data stored from train.
 
-    :return: doesn't return anything, a plot should pop-up 
+    :return: doesn't return anything, a plot should pop-up and save.
     """
     x = [i for i in range(len(losses))]
     plt.plot(x, losses)
@@ -92,6 +92,22 @@ def visualize_loss(losses):
     plt.xlabel('Batch')
     plt.ylabel('Loss')
     plt.savefig('../loss.png')
+    plt.show()
+
+def visualize_accuracy(accuracies): 
+    """
+    Uses Matplotlib to visualize the losses of our model.
+    :param losses: list of loss data stored from train. Can use the model's loss_list 
+    field 
+
+    :return: doesn't return anything, a plot should pop-up 
+    """
+    x = [i for i in range(len(accuracies))]
+    plt.plot(x, accuracies)
+    plt.title('Accuracy per batch')
+    plt.xlabel('Batch')
+    plt.ylabel('Accuracy')
+    plt.savefig('../accuracy.png')
     plt.show()
 
 
@@ -124,6 +140,7 @@ def main():
     # test(model, test_inputs, test_labels)
 
     visualize_loss(model.loss_list)
+    visualize_accuracy(model.accuracy_list)
 
 if __name__ == '__main__':
     main()

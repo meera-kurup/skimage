@@ -11,6 +11,7 @@ class Model(tf.keras.Model):
         self.num_classes = num_classes
         self.batch_size = 64
         self.loss_list = []
+        self.accuracy_list = []
         self.learning_rate = 0.0001
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
         image_size = 256
