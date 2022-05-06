@@ -76,7 +76,7 @@ def test(model, test_inputs, test_labels):
     # batch_num = int(len(test_inputs)) / model.batch_size
     # avg_accuracy = float(model_accuracy/batch_num)
 
-    return model.accuracy(model.call(test_inputs), test_labels).eval()
+    return model.accuracy(model.call(test_inputs), test_labels)
 
 def visualize(title, list): 
     """
@@ -161,9 +161,6 @@ def main():
             train_labels = np.append(train_labels, np.array(labels[1000*n:1000*n+split, :]), axis = 0)
             test_labels = np.append(test_labels, np.array(labels[1000*n+split: 1000*(n+1), :]), axis = 0)
 
-    print(train_inputs.shape)
-    print(test_inputs.shape)
-
     # Train model
     model = Model(num_classes, image_size)
     epochs = 1
@@ -180,7 +177,7 @@ def main():
 
     # Test model
     accuracy = test(model, test_inputs, test_labels)
-    print("Model Test Average Accuracy: " + str(accuracy))
+    tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()[0]))
 
 if __name__ == '__main__':
     main()
