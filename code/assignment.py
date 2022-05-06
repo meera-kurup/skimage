@@ -142,6 +142,12 @@ def main():
         train_labels.append(labels[1000*n:1000*n+split, :])
         test_labels.append(labels[1000*n+split: 1000*(n+1), :])
 
+    for n in range(num_classes):
+        train_inputs[0].append(train_inputs[n])
+        test_inputs[0].append(test_inputs[n])
+        train_labels[0].append(train_labels[n])
+        test_labels[0].append(test_labels[n])
+
     print(len(train_inputs))
     print(len(test_inputs))
     train_inputs = np.array(train_inputs)
