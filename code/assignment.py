@@ -141,15 +141,15 @@ def main():
     test_labels = []
     for n in range(num_classes):
         if n == 0 :
-            train_inputs = inputs[1000*n:1000*n+split, :, :, :]
-            test_inputs = inputs[1000*n+split: 1000*(n+1), :, :, :]
-            train_labels = labels[1000*n:1000*n+split, :]
-            test_labels = labels[1000*n+split: 1000*(n+1), :]
+            train_inputs = np.array(inputs[1000*n:1000*n+split, :, :, :])
+            test_inputs = np.array(inputs[1000*n+split: 1000*(n+1), :, :, :])
+            train_labels = np.array(labels[1000*n:1000*n+split, :])
+            test_labels = np.array(labels[1000*n+split: 1000*(n+1), :])
         else:
-            train_inputs.concat(inputs[1000*n:1000*n+split, :, :, :], 0)
-            test_inputs.concat(inputs[1000*n+split: 1000*(n+1), :, :, :], 0)
-            train_labels.concat(labels[1000*n:1000*n+split, :], 0)
-            test_labels.concat(labels[1000*n+split: 1000*(n+1), :], 0)
+            train_inputs.concat(np.array(inputs[1000*n:1000*n+split, :, :, :], 0))
+            test_inputs.concat(np.array(inputs[1000*n+split: 1000*(n+1), :, :, :], 0))
+            train_labels.concat(np.array(labels[1000*n:1000*n+split, :], 0))
+            test_labels.concat(np.array(labels[1000*n+split: 1000*(n+1), :], 0))
 
     # for n in range(num_classes):
     #     train_inputs[0].append(train_inputs[n])
