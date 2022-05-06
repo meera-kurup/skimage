@@ -124,6 +124,7 @@ def main():
     
     :return: None
     '''
+    image_size = 128
     inputs, labels = get_data("../data/imgs.npy", "../data/labels.npy", image_size)
     #print(labels)
     # num_classes = len(label_dict)
