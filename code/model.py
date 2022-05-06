@@ -11,7 +11,7 @@ class Model(tf.keras.Model):
         self.num_classes = num_classes
         self.batch_size = 64
         self.loss_list = []
-        self.learning_rate = 0.0001
+        self.learning_rate = 0.001
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
         image_size = 256
         # self.optimizer = tf.keras.optimizers.RMSprop(learning_rate=self.learning_rate)
@@ -19,12 +19,10 @@ class Model(tf.keras.Model):
         # ### CNN from New Paper ###
         self.cnn = tf.keras.Sequential([
             InceptionV3(weights='imagenet', include_top=False, input_tensor=Input(shape=(image_size,image_size,3))),
-            GlobalAveragePooling2D(),
-            Flatten(),
-            Dense(128, activation='relu'),
-            BatchNormalization(),
+            AveragePooling2D(),
             Dropout(0.4),
-            Dense(self.num_classes, activation = "relu")
+            Flatten(),
+            Dense(self.num_classes)
         ])
 
         
