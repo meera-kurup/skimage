@@ -74,10 +74,13 @@ def test(model, test_inputs, test_labels):
         logits = model.call(input_batches)
         model_accuracy += model.accuracy(logits, label_batches)
     batch_num = int(len(test_inputs)) / model.batch_size
-    loss = float(model_accuracy/batch_num)
-    print("Test Loss: " + str(loss))
+    avg_accuracy = float(model_accuracy/batch_num)
+
+    # average_accuracy = model_accuracy/
+    # model.accuracy(model.call(test_inputs, is_testing=True), test_labels)
+    # print("Test Loss: " + str(loss))
     print("Done Test")
-    return loss
+    return avg_accuracy
 
 def visualize_loss(losses): 
     """
@@ -125,22 +128,36 @@ def main():
     :return: None
     '''
     image_size = 128
+    num_classes = 5
+
+
     inputs, labels = get_data("../data/imgs.npy", "../data/labels.npy", image_size)
     #print(labels)
     # num_classes = len(label_dict)
-    num_classes = 5
+    split = 750
+    train_inputs = []
+    train_labels = []
+    test_inputs = []
+    test_labels = []
+    for n in range(num_classes):
+        train_inputs.append(inputs[1000*n:1000*n+split, :, :, :])
+        test_inputs.append(inputs[1000*n+split: 1000*(n+1), :, :, :])
+        train_labels.append(labels[1000*n:1000*n+split, :])
+        test_labels.append(labels[1000*n+split: 1000*(n+1), :])
+
     model = Model(num_classes, image_size)
     # print(len(label_dict))
-    epochs = 50
+    epochs = 1
     print("Training...")
     for e in range(epochs):
         print("Epoch: " + str(e+1) + "/" + str(epochs))
-        train(model, inputs, labels)
-
-    # test(model, test_inputs, test_labels)
+        train(model, train_inputs, train_labels)
 
     visualize_loss(model.loss_list)
     visualize_accuracy(model.accuracy_list)
+
+    avg_accuracy = test(model, test_inputs, test_labels)
+    print("Model Test Average Accuracy: " + str(avg_accuracy))
 
 if __name__ == '__main__':
     main()
