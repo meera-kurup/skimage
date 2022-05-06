@@ -81,20 +81,16 @@ def get_data(img_file, labels_file):
 
 	# num_classes = len(label_dict)
 
-	first_class = 0
-	second_class = 1
-	third_class = 2
-	forth_class = 3
-	fifth_class = 5
-
 	labels = np.vectorize(label_dict.get)(labels)
-	processed_labels = labels[((labels == first_class) | (labels == second_class)) | (labels == third_class)]
-	temp_labels = np.where(processed_labels == second_class, 1, 0)
-	temp_labels2 = np.where(processed_labels == third_class, 2, 0)
-	processed_labels = np.add(temp_labels, temp_labels2)
+	processed_labels = labels[((labels == 0) | (labels == 1)) | (labels == 2) | (labels == 3) | (labels == 4)]
+	temp_labels = np.where(processed_labels == 1, 1, 0)
+	temp_labels2 = np.where(processed_labels == 2, 2, 0)
+	temp_labels3 = np.where(processed_labels == 3, 3, 0)
+	temp_labels4 = np.where(processed_labels == 4, 4, 0)
+	processed_labels = sum(temp_labels, temp_labels2, temp_labels3, temp_labels4)
 	one_hot = tf.one_hot(processed_labels, depth=3)
 
-	processed_inputs = inputs[((labels == first_class) | (labels == second_class)) | (labels == third_class)]
+	processed_inputs = inputs[((labels == 0) | (labels == 1)) | (labels == 2) | (labels == 3) | (labels == 4)]
 	processed_inputs = np.array(processed_inputs/255)
 	processed_inputs = tf.reshape(processed_inputs, (-1, 3, image_size, image_size))
 	processed_inputs = tf.transpose(processed_inputs, perm=[0,2,3,1])

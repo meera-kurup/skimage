@@ -127,7 +127,7 @@ def main():
     inputs, labels = get_data("../data/imgs.npy", "../data/labels.npy")
     #print(labels)
     # num_classes = len(label_dict)
-    num_classes = 3
+    num_classes = 5
     model = Model(num_classes)
     # print(len(label_dict))
     epochs = 50
