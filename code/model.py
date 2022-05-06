@@ -44,14 +44,14 @@ class Model(tf.keras.Model):
         n = 8
         ## BEST ###
         self.cnn = tf.keras.Sequential([
-            Conv2D(filters = 32, kernel_size = (5*n,5*n), strides = 2, padding = 'Same', activation ='relu'),
-            Conv2D(filters = 32, kernel_size = (5*n,5*n), strides = 2, padding = 'Same', activation ='relu'),
+            Conv2D(filters = 32, kernel_size = (5*n,5*n), strides = 2*n, padding = 'Same', activation ='relu'),
+            Conv2D(filters = 32, kernel_size = (5*n,5*n), strides = 2*n, padding = 'Same', activation ='relu'),
             MaxPool2D(pool_size=(2,2)),
             BatchNormalization(),
             Dropout(0.2),
 
-            Conv2D(filters = 64, kernel_size = (3*n,3*n),padding = 'Same', activation ='relu'),
-            Conv2D(filters = 64, kernel_size = (3*n,3*n),padding = 'Same', activation ='relu'), 
+            Conv2D(filters = 64, kernel_size = (3*n,3*n), strides = 2*n, padding = 'Same', activation ='relu'),
+            Conv2D(filters = 64, kernel_size = (3*n,3*n), strides = 2*n, padding = 'Same', activation ='relu'), 
             MaxPool2D(pool_size=(2,2)),
             BatchNormalization(),
             Dropout(0.2),
