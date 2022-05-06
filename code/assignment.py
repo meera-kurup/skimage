@@ -122,7 +122,7 @@ def main():
 
     # test(model, test_inputs, test_labels)
 
-    # visualize_loss(model.loss_list)
+    visualize_loss(model.loss_list)
 
 if __name__ == '__main__':
     main()
