@@ -11,19 +11,19 @@ class Model(tf.keras.Model):
         self.num_classes = num_classes
         self.batch_size = 64
         self.loss_list = []
-        self.learning_rate = 0.001
+        self.learning_rate = 0.0001
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
         image_size = 256
         # self.optimizer = tf.keras.optimizers.RMSprop(learning_rate=self.learning_rate)
 
         # ### CNN from New Paper ###
-        self.cnn = tf.keras.Sequential([
-            InceptionV3(weights='imagenet', include_top=False, input_tensor=Input(shape=(image_size,image_size,3))),
-            AveragePooling2D(),
-            Dropout(0.4),
-            Flatten(),
-            Dense(self.num_classes)
-        ])
+        # self.cnn = tf.keras.Sequential([
+        #     InceptionV3(weights='imagenet', include_top=False, input_tensor=Input(shape=(image_size,image_size,3))),
+        #     AveragePooling2D(),
+        #     Dropout(0.4),
+        #     Flatten(),
+        #     Dense(self.num_classes)
+        # ])
 
         
         ### CNN ###
@@ -41,32 +41,32 @@ class Model(tf.keras.Model):
         #     # CONVOLUTION LAYERS
         #     # InceptionV3(weights='imagenet', include_top=False, input_tensor=(299,299,3)),
 
-        # self.cnn = tf.keras.Sequential([
-        #     InceptionV3(weights='imagenet', include_top=False, input_tensor=Input(shape=(image_size, image_size, 3))),
-        #     Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
-        #     Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
-        #     MaxPool2D(pool_size=(2,2)),
-        #     BatchNormalization(),
-        #     Dropout(0.4),
+        ## BEST ###
+        self.cnn = tf.keras.Sequential([
+            Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
+            Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
+            MaxPool2D(pool_size=(2,2)),
+            BatchNormalization(),
+            Dropout(0.2),
 
-        #     Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'),
-        #     Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'), 
-        #     MaxPool2D(pool_size=(2,2)),
-        #     BatchNormalization(),
-        #     Dropout(0.4),
+            Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'),
+            Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'), 
+            MaxPool2D(pool_size=(2,2)),
+            BatchNormalization(),
+            Dropout(0.2),
 
-        #     Conv2D(filters = 128, kernel_size = (2,2),padding = 'Same', activation ='relu'),
-        #     Conv2D(filters = 128, kernel_size = (2,2),padding = 'Same', activation ='relu'),
-        #     MaxPool2D(pool_size=(2,2)),
-        #     BatchNormalization(),
-        #     Dropout(0.2),
+            Conv2D(filters = 128, kernel_size = (2,2),padding = 'Same', activation ='relu'),
+            Conv2D(filters = 128, kernel_size = (2,2),padding = 'Same', activation ='relu'),
+            MaxPool2D(pool_size=(2,2)),
+            BatchNormalization(),
+            Dropout(0.2),
 
-        #     GlobalAveragePooling2D(),
-        #     Flatten(),
-        #     Dense(128, activation='relu'),
-        #     Dropout(0.2),
-        #     Dense(self.num_classes)
-        # ])
+            GlobalAveragePooling2D(),
+            Flatten(),
+            Dense(self.num_classes, activation='relu'),
+            Dropout(0.2),
+            # Dense(self.num_classes)
+        ])
 
         # self.cnn = tf.keras.Sequential([
         #     Conv2D(filters = 128, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
