@@ -145,10 +145,10 @@ def main():
             train_labels = np.array(labels[1000*n:1000*n+split, :])
             test_labels = np.array(labels[1000*n+split: 1000*(n+1), :])
         else:
-            train_inputs = np.append(train_inputs, np.array(inputs[1000*n:1000*n+split, :, :, :]))
-            test_inputs = np.append(test_inputs, np.array(inputs[1000*n+split: 1000*(n+1), :, :, :]))
-            train_labels = np.append(train_labels, np.array(labels[1000*n:1000*n+split, :]))
-            test_labels = np.append(test_labels, np.array(labels[1000*n+split: 1000*(n+1), :]))
+            train_inputs = np.append(train_inputs, np.array(inputs[1000*n:1000*n+split, :, :, :]), axis = 0)
+            test_inputs = np.append(test_inputs, np.array(inputs[1000*n+split: 1000*(n+1), :, :, :]), axis = 0)
+            train_labels = np.append(train_labels, np.array(labels[1000*n:1000*n+split, :]), axis = 0)
+            test_labels = np.append(test_labels, np.array(labels[1000*n+split: 1000*(n+1), :]), axis = 0)
 
     print(len(train_inputs))
     print(len(test_inputs))
