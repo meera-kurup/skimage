@@ -2,6 +2,7 @@ import numpy as np
 import tensorflow as tf
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPool2D, GlobalAveragePooling2D, BatchNormalization, AveragePooling2D, Input
 from keras.applications.inception_v3 import InceptionV3
+from keras.regularizers import l2
 
 class Model(tf.keras.Model):
     def __init__(self, num_classes):
@@ -43,7 +44,7 @@ class Model(tf.keras.Model):
         #     # InceptionV3(weights='imagenet', include_top=False, input_tensor=(299,299,3)),
 
         # n = 8
-        # ## BEST ###
+        # ## CONV ##
         # self.cnn = tf.keras.Sequential([
         #     Conv2D(filters = 32, kernel_size = (5*n,5*n), strides = 2*n, padding = 'Same', activation ='relu'),
         #     Conv2D(filters = 32, kernel_size = (5*n,5*n), strides = 2*n, padding = 'Same', activation ='relu'),
@@ -68,42 +69,7 @@ class Model(tf.keras.Model):
         #     GlobalAveragePooling2D(),
         #     Dense(512, activation="relu"),
         #     Dropout(0.2),
-        #     # Flatten(),
-        #     Dense(self.num_classes),
-        #     # Dropout(0.2),
-        #     # Dense(self.num_classes)
-        # ])
-
-        # self.cnn = tf.keras.Sequential([
-        #     Conv2D(filters = 128, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
-        #     Conv2D(filters = 128, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
-        #     MaxPool2D(pool_size=(2,2)),
-        #     BatchNormalization(),
-        #     Dropout(0.4),
-
-        #     Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'),
-        #     Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'), 
-        #     MaxPool2D(pool_size=(2,2)),
-        #     BatchNormalization(),
-        #     Dropout(0.4),
-
-        #     Conv2D(filters = 32, kernel_size = (2,2),padding = 'Same', activation ='relu'),
-        #     Conv2D(filters = 32, kernel_size = (2,2),padding = 'Same', activation ='relu'),
-        #     MaxPool2D(pool_size=(2,2)),
-        #     BatchNormalization(),
-        #     Dropout(0.4),
-
-        #     GlobalAveragePooling2D(),
-        #     Flatten(),
-        #     Dense(512, activation='relu'),
-        #     Dropout(0.4),
-        #     # Flatten(),
-        #     # Dense(256, activation='relu'),
-        #     # Dropout(0.4),
-        #     # Flatten(),
-        #     # Dense(64, activation='relu'),
-        #     # Dropout(0.4),
-        #     Dense(self.num_classes)
+        #     Dense(self.num_classes, activation="softmax", kernel_regularizer=l2()),
         # ])
 
         self.cnn = tf.keras.Sequential()
@@ -114,7 +80,7 @@ class Model(tf.keras.Model):
         self.cnn.add(tf.keras.layers.Flatten())
         self.cnn.add(tf.keras.layers.Dense(64, activation='relu'))
         self.cnn.add(tf.keras.layers.Dense(32, activation='relu'))
-        self.cnn.add(tf.keras.layers.Dense(self.num_classes))
+        self.cnn.add(tf.keras.layers.Dense(self.num_classes, activation='softmax'))
 
     @tf.function
     def call(self, input):
@@ -127,8 +93,9 @@ class Model(tf.keras.Model):
         return tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
     
     def loss(self, prbs, labels):
-        loss = tf.nn.softmax_cross_entropy_with_logits(labels, prbs)
-        avg_loss = tf.reduce_mean(loss)
-        return avg_loss
+        # loss = tf.nn.softmax_cross_entropy_with_logits(labels, prbs)
+        # avg_loss = tf.reduce_mean(loss)
+        # return avg_loss
+        return tf.reduce_sum(tf.keras.losses.categorical_crossentropy(labels, prbs))
     
     
