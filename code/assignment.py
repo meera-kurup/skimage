@@ -91,7 +91,7 @@ def visualize_loss(losses):
     plt.title('Loss per batch')
     plt.xlabel('Batch')
     plt.ylabel('Loss')
-    timestamp = time.strftime("%Y%m%d_%H%M%S.txt")
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
     plt.savefig('../results/loss' + timestamp + '.png')
     plt.close()
 
@@ -107,7 +107,7 @@ def visualize_accuracy(accuracies):
     plt.title('Accuracy per batch')
     plt.xlabel('Batch')
     plt.ylabel('Accuracy')
-    timestamp = time.strftime("%Y%m%d_%H%M%S.txt")
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
     plt.savefig('../results/accuracy' + timestamp + '.png')
     plt.close()
 
