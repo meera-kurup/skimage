@@ -20,11 +20,9 @@ class Model(tf.keras.Model):
         self.cnn = tf.keras.Sequential([
             InceptionV3(weights='imagenet', include_top=False, input_tensor=Input(shape=(image_size,image_size,3))),
             GlobalAveragePooling2D(),
-            Flatten(),
-            Dense(128, activation='relu'),
-            BatchNormalization(),
             Dropout(0.4),
-            Dense(self.num_classes, activation = "relu")
+            Flatten(),
+            Dense(self.num_classes)
         ])
 
         
