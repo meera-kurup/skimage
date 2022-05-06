@@ -76,13 +76,29 @@ def test(model, test_inputs, test_labels):
     # batch_num = int(len(test_inputs)) / model.batch_size
     # avg_accuracy = float(model_accuracy/batch_num)
 
-    return model.accuracy(model.call(test_inputs), test_labels)
+    return model.accuracy(model.call(test_inputs), test_labels).eval()
 
+def visualize(title, list): 
+    """
+    Uses Matplotlib to visualize the loss/accuracy of our model.
+    :param title: type of data to visualize
+    :param list: list of data stored from train.
+
+    :return: doesn't return anything, a plot should pop-up and save.
+    """
+    x = [i for i in range(len(list))]
+    plt.plot(x, list)
+    plt.title(title + ' per batch')
+    plt.xlabel('Batch')
+    plt.ylabel(title)
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    plt.savefig('../results/' + title + "_" + timestamp + '.png')
+    plt.close()
 
 def visualize_loss(losses): 
     """
-    Uses Matplotlib to visualize the losses/accuracies of our model.
-    :param losses: list of loss/accuracy data stored from train.
+    Uses Matplotlib to visualize the losses of our model.
+    :param losses: list of loss data stored from train.
 
     :return: doesn't return anything, a plot should pop-up and save.
     """
@@ -114,15 +130,8 @@ def visualize_accuracy(accuracies):
 
 def main():
     '''
-    Read in CIFAR10 data (limited to 2 classes), initialize your model, and train and 
-    test your model for a number of epochs. We recommend that you train for
-    10 epochs and at most 25 epochs. 
-    
-    CS1470 students should receive a final accuracy 
-    on the testing examples for cat and dog of >=70%.
-    
-    CS2470 students should receive a final accuracy 
-    on the testing examples for cat and dog of >=75%.
+    Read in data (limited to 5 classes), initialize model, and train and 
+    test your model for a number of epochs.
     
     :return: None
     '''
@@ -133,6 +142,8 @@ def main():
     inputs, labels = get_data("../data/imgs.npy", "../data/labels.npy", image_size)
     #print(labels)
     # num_classes = len(label_dict)
+
+    # Split inputs into train and test data
     split = 750
     train_inputs = []
     train_labels = []
@@ -153,6 +164,7 @@ def main():
     print(train_inputs.shape)
     print(test_inputs.shape)
 
+    # Train model
     model = Model(num_classes, image_size)
     epochs = 1
     print("Training...")
@@ -160,9 +172,13 @@ def main():
         print("Epoch: " + str(e+1) + "/" + str(epochs))
         train(model, train_inputs, train_labels)
 
-    visualize_loss(model.loss_list)
-    visualize_accuracy(model.accuracy_list)
+    # Save graphs in results folder
+    # visualize_loss(model.loss_list)
+    # visualize_accuracy(model.accuracy_list)
+    visualize("loss", model.loss_list)
+    visualize("accuracy", model.accuracy_list)
 
+    # Test model
     accuracy = test(model, test_inputs, test_labels)
     print("Model Test Average Accuracy: " + str(accuracy))
 
