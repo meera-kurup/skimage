@@ -12,7 +12,7 @@ maxsize = (img_len, img_len)
 
 print("Reading data...")
 count = 0
-for subdir, dirs, files in os.walk("../data/images/"):
+for subdir, dirs, files in os.walk("../../../meerakurup/images/"):
     for file in files:
         label = subdir.split('/')[-1]
         labels.append(label)
