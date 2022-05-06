@@ -61,10 +61,14 @@ class Model(tf.keras.Model):
             BatchNormalization(),
             Dropout(0.2),
 
+            Conv2D(filters = 256, kernel_size = (2,2),padding = 'Same', activation ='relu'),
+            Conv2D(filters = 256, kernel_size = (2,2),padding = 'Same', activation ='relu'),
             GlobalAveragePooling2D(),
-            Flatten(),
-            Dense(self.num_classes, activation='relu'),
+            Dense(512, activation="relu"),
             Dropout(0.2),
+            # Flatten(),
+            Dense(self.num_classes),
+            # Dropout(0.2),
             # Dense(self.num_classes)
         ])
 
