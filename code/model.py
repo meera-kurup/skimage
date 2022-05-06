@@ -28,14 +28,15 @@ class Model(tf.keras.Model):
 
         
         ### CNN ###
-        self.cnn = tf.keras.Sequential([
-            Conv2D(16, (3, 3), input_shape=(32, 32, 3), activation='relu'),
-            MaxPool2D(pool_size=(2,2)),
-            Conv2D(16, (3, 3), activation = 'relu'),
-            MaxPool2D(pool_size=(2,2)),
-            Flatten(),
-            Dense(128, activation='relu'),
-            Dense(num_classes)])
+        # self.cnn = tf.keras.Sequential([
+        #     Conv2D(16, (3, 3), input_shape=(32, 32, 3), activation='relu'),
+        #     MaxPool2D(pool_size=(2,2)),
+        #     Conv2D(16, (3, 3), activation = 'relu'),
+        #     MaxPool2D(pool_size=(2,2)),
+        #     Flatten(),
+        #     Dense(128, activation='relu'),
+        #     Dense(16, activation='relu'),
+        #     Dense(num_classes)])
         # 1D or 2D Max pooling?
         # train for more epochs
 
@@ -63,8 +64,7 @@ class Model(tf.keras.Model):
         #     GlobalAveragePooling2D(),
         #     Flatten(),
         #     Dense(512, activation='relu'),
-        #     Dropout(0.4),
-        #     Dense(self.num_classes, activation = "softmax"),
+        #     Dropout(0.4)
         # ])
 
         # self.cnn = tf.keras.Sequential()
@@ -73,8 +73,8 @@ class Model(tf.keras.Model):
         # self.cnn.add(tf.keras.layers.Conv2D(64, kernel_size=(3, 3), activation='relu'))
         # self.cnn.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
         # self.cnn.add(tf.keras.layers.Flatten())
-        # self.cnn.add(tf.keras.layers.Dense(256, activation='relu'))
-        # self.cnn.add(tf.keras.layers.Dense(128, activation='relu'))
+        # self.cnn.add(tf.keras.layers.Dense(64, activation='relu'))
+        # self.cnn.add(tf.keras.layers.Dense(32, activation='relu'))
         # self.cnn.add(tf.keras.layers.Dense(self.num_classes))
 
     @tf.function

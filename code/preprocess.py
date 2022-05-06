@@ -62,7 +62,8 @@ def get_data(img_file, labels_file):
 	# print("Loading testing data...")
 	# test_inputs = np.load(test_img_file)
 	# test_labels = np.load(test_labels_file)
-
+	img = Image.fromarray(inputs[0], 'RGB')
+	img.show()
 	# Getting all labels that are for food images
 	# labels = np.array(labels)
 
