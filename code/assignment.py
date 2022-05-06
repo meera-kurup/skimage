@@ -47,12 +47,12 @@ def train(model, train_inputs, train_labels):
         if b % 100 == 0:
             print("Loss after {} training steps: {}".format(b, loss))
             print("Accuracy after {} training steps: {}".format(b, accuracy))
-        
-        print("0")
+    
+        print("before gradients")
         gradients = tape.gradient(loss, model.trainable_variables)
-        print("1")
+        print("after gradients")
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
-        print("2")
+        print("after optimizer")
 
     return model.loss_list
 
