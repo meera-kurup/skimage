@@ -106,7 +106,7 @@ class Model(tf.keras.Model):
         # ])
 
         self.cnn = tf.keras.Sequential()
-        self.cnn.add(tf.keras.layers.Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(32,32,3)))
+        self.cnn.add(tf.keras.layers.Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(256,256,3)))
         self.cnn.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
         self.cnn.add(tf.keras.layers.Conv2D(64, kernel_size=(3, 3), activation='relu'))
         self.cnn.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
