@@ -24,7 +24,7 @@ class Model(tf.keras.Model):
             Dense(128, activation='relu'),
             BatchNormalization(),
             Dropout(0.4),
-            Dense(self.num_classes, activation = "softmax")
+            Dense(self.num_classes, activation = "relu")
         ])
 
         
