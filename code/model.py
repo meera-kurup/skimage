@@ -46,26 +46,26 @@ class Model(tf.keras.Model):
             Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
             Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
             MaxPool2D(pool_size=(2,2)),
-            BatchNormalization(),
-            Dropout(0.4),
+            # BatchNormalization(),
+            Dropout(0.2),
 
             Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'),
             Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'), 
             MaxPool2D(pool_size=(2,2)),
-            BatchNormalization(),
-            Dropout(0.4),
+            # BatchNormalization(),
+            Dropout(0.2),
 
             Conv2D(filters = 128, kernel_size = (2,2),padding = 'Same', activation ='relu'),
             Conv2D(filters = 128, kernel_size = (2,2),padding = 'Same', activation ='relu'),
             MaxPool2D(pool_size=(2,2)),
-            BatchNormalization(),
+            # BatchNormalization(),
             Dropout(0.2),
 
             GlobalAveragePooling2D(),
             Flatten(),
-            Dense(128, activation='relu'),
+            Dense(self.num_classes, activation='relu'),
             Dropout(0.2),
-            Dense(self.num_classes)
+            # Dense(self.num_classes)
         ])
 
         # self.cnn = tf.keras.Sequential([
