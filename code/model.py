@@ -11,7 +11,7 @@ class Model(tf.keras.Model):
         self.num_classes = num_classes
         self.batch_size = 64
         self.loss_list = []
-        self.learning_rate = 0.001
+        self.learning_rate = 0.0001
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
         image_size = 256
         # self.optimizer = tf.keras.optimizers.RMSprop(learning_rate=self.learning_rate)
@@ -46,19 +46,19 @@ class Model(tf.keras.Model):
             Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
             Conv2D(filters = 32, kernel_size = (5,5), strides = 2, padding = 'Same', activation ='relu'),
             MaxPool2D(pool_size=(2,2)),
-            # BatchNormalization(),
+            BatchNormalization(),
             Dropout(0.2),
 
             Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'),
             Conv2D(filters = 64, kernel_size = (3,3),padding = 'Same', activation ='relu'), 
             MaxPool2D(pool_size=(2,2)),
-            # BatchNormalization(),
+            BatchNormalization(),
             Dropout(0.2),
 
             Conv2D(filters = 128, kernel_size = (2,2),padding = 'Same', activation ='relu'),
             Conv2D(filters = 128, kernel_size = (2,2),padding = 'Same', activation ='relu'),
             MaxPool2D(pool_size=(2,2)),
-            # BatchNormalization(),
+            BatchNormalization(),
             Dropout(0.2),
 
             GlobalAveragePooling2D(),
