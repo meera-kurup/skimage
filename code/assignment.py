@@ -139,7 +139,7 @@ def main():
 
     # Test model
     accuracy = test(model, test_inputs, test_labels)
-    tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()[0]))
+    tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
 
 if __name__ == '__main__':
     main()
