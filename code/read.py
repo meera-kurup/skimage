@@ -13,6 +13,7 @@ maxsize = (img_len, img_len)
 print("Reading data...")
 count = 0
 for subdir, dirs, files in os.walk("../../../meerakurup/images/"):
+    print(subdir)
     for file in files:
         if file != ".DS_Store":
             label = subdir.split('/')[-1]
