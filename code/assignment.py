@@ -142,6 +142,9 @@ def main():
         train_labels.append(labels[1000*n:1000*n+split, :])
         test_labels.append(labels[1000*n+split: 1000*(n+1), :])
 
+    print(train_inputs.shape)
+    print(test_inputs.shape)
+    
     model = Model(num_classes, image_size)
     # print(len(label_dict))
     epochs = 1
@@ -153,8 +156,8 @@ def main():
     visualize_loss(model.loss_list)
     visualize_accuracy(model.accuracy_list)
 
-    accuracy = test(model, test_inputs, test_labels)
-    print("Model Test Average Accuracy: " + str(accuracy))
+    # accuracy = test(model, test_inputs, test_labels)
+    # print("Model Test Average Accuracy: " + str(accuracy))
 
 if __name__ == '__main__':
     main()
