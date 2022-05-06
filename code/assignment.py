@@ -150,17 +150,10 @@ def main():
             train_labels = np.append(train_labels, np.array(labels[1000*n:1000*n+split, :]), axis = 0)
             test_labels = np.append(test_labels, np.array(labels[1000*n+split: 1000*(n+1), :]), axis = 0)
 
-    print(len(train_inputs))
-    print(len(test_inputs))
-    # train_inputs = np.array(train_inputs)
-    # test_inputs = np.array(test_inputs)
-    # train_labels = np.array(train_labels)
-    # test_labels = np.array(test_labels)
     print(train_inputs.shape)
     print(test_inputs.shape)
 
     model = Model(num_classes, image_size)
-    # print(len(label_dict))
     epochs = 1
     print("Training...")
     for e in range(epochs):
@@ -170,8 +163,8 @@ def main():
     visualize_loss(model.loss_list)
     visualize_accuracy(model.accuracy_list)
 
-    # accuracy = test(model, test_inputs, test_labels)
-    # print("Model Test Average Accuracy: " + str(accuracy))
+    accuracy = test(model, test_inputs, test_labels)
+    print("Model Test Average Accuracy: " + str(accuracy))
 
 if __name__ == '__main__':
     main()
