@@ -28,7 +28,7 @@ from PIL import Image
 # 	labels = [ item for item in os.listdir(root) if os.path.isdir(os.path.join(root, item)) ]
 # 	return labels
 
-def get_data(img_file, labels_file):
+def get_data(img_file, labels_file, image_size):
 	"""
 	Given a file path and two target classes, returns an array of 
 	normalized inputs (images) and an array of labels. 
@@ -50,7 +50,6 @@ def get_data(img_file, labels_file):
 	has size (num_examples, num_cl
 	num_classes = 0sses)
 	"""
-	image_size = 256
 	# unpickled_file = unpickle(file_path)
 	# inputs = unpickled_file[b'data']
 	# inputs = [smart_resize(input_image, image_size) for input_image in inputs]

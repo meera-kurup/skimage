@@ -124,11 +124,11 @@ def main():
     
     :return: None
     '''
-    inputs, labels = get_data("../data/imgs.npy", "../data/labels.npy")
+    inputs, labels = get_data("../data/imgs.npy", "../data/labels.npy", image_size)
     #print(labels)
     # num_classes = len(label_dict)
     num_classes = 5
-    model = Model(num_classes)
+    model = Model(num_classes, image_size)
     # print(len(label_dict))
     epochs = 50
     print("Training...")

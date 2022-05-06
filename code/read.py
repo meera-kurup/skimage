@@ -8,7 +8,7 @@ food_list = ["sashimi", "baklava", "ramen", "edamame", "chocolate_cake"]
 
 # test_labels = []
 # test_images = []
-img_len = 256
+img_len = 128
 maxsize = (img_len, img_len)
 
 print("Reading data...")

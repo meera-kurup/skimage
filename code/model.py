@@ -5,7 +5,7 @@ from keras.applications.inception_v3 import InceptionV3
 from keras.regularizers import l2
 
 class Model(tf.keras.Model):
-    def __init__(self, num_classes):
+    def __init__(self, num_classes, image_size):
         super(Model, self).__init__()
         
         ### HYPERPARAMETERS ###
@@ -15,7 +15,7 @@ class Model(tf.keras.Model):
         self.accuracy_list = []
         self.learning_rate = 0.0001
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
-        image_size = 256
+        image_size = image_size
         # self.optimizer = tf.keras.optimizers.RMSprop(learning_rate=self.learning_rate)
 
         # ### CNN from New Paper ###
@@ -73,7 +73,7 @@ class Model(tf.keras.Model):
         # ])
 
         self.cnn = tf.keras.Sequential()
-        self.cnn.add(tf.keras.layers.Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(256,256,3)))
+        self.cnn.add(tf.keras.layers.Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(image_size,image_size,3)))
         self.cnn.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
         self.cnn.add(tf.keras.layers.Conv2D(64, kernel_size=(3, 3), activation='relu'))
         self.cnn.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
