@@ -142,9 +142,13 @@ def main():
         train_labels.append(labels[1000*n:1000*n+split, :])
         test_labels.append(labels[1000*n+split: 1000*(n+1), :])
 
+    train_inputs = np.array(train_inputs)
+    test_inputs = np.array(test_inputs)
+    train_labels = np.array(train_labels)
+    test_labels = np.array(test_labels)
     print(train_inputs.shape)
     print(test_inputs.shape)
-    
+
     model = Model(num_classes, image_size)
     # print(len(label_dict))
     epochs = 1
