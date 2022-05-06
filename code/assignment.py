@@ -65,22 +65,19 @@ def test(model, test_inputs, test_labels):
     :return: test accuracy - this should be the average accuracy across
     all batches
     """
-    model_accuracy = 0
-    print("Entering Test")
+    # model_accuracy = 0
+    # print("Entering Test")
 
-    for i in range(0, len(test_inputs), model.batch_size):
-        input_batches = test_inputs[i:i+model.batch_size,:]
-        label_batches = test_labels[i:i+model.batch_size,:]
-        logits = model.call(input_batches)
-        model_accuracy += model.accuracy(logits, label_batches)
-    batch_num = int(len(test_inputs)) / model.batch_size
-    avg_accuracy = float(model_accuracy/batch_num)
+    # for i in range(0, len(test_inputs), model.batch_size):
+    #     input_batches = test_inputs[i:i+model.batch_size,:]
+    #     label_batches = test_labels[i:i+model.batch_size,:]
+    #     logits = model.call(input_batches)
+    #     model_accuracy += model.accuracy(logits, label_batches)
+    # batch_num = int(len(test_inputs)) / model.batch_size
+    # avg_accuracy = float(model_accuracy/batch_num)
 
-    # average_accuracy = model_accuracy/
-    # model.accuracy(model.call(test_inputs, is_testing=True), test_labels)
-    # print("Test Loss: " + str(loss))
-    print("Done Test")
-    return avg_accuracy
+    return model.accuracy(model.call(test_inputs), test_labels)
+
 
 def visualize_loss(losses): 
     """
@@ -156,8 +153,8 @@ def main():
     visualize_loss(model.loss_list)
     visualize_accuracy(model.accuracy_list)
 
-    avg_accuracy = test(model, test_inputs, test_labels)
-    print("Model Test Average Accuracy: " + str(avg_accuracy))
+    accuracy = test(model, test_inputs, test_labels)
+    print("Model Test Average Accuracy: " + str(accuracy))
 
 if __name__ == '__main__':
     main()
