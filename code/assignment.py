@@ -41,7 +41,6 @@ def train(model, train_inputs, train_labels):
             # print(y_pred.shape)
             # print(batch_labels.shape)
             loss = model.loss(y_pred, batch_labels)
-            # print(loss)
             model.loss_list.append(loss)
             accuracy = model.accuracy(y_pred, batch_labels)
             model.accuracy_list.append(accuracy)
@@ -146,10 +145,10 @@ def main():
             train_labels = np.array(labels[1000*n:1000*n+split, :])
             test_labels = np.array(labels[1000*n+split: 1000*(n+1), :])
         else:
-            np.append(train_inputs, np.array(inputs[1000*n:1000*n+split, :, :, :]))
-            np.append(test_inputs, np.array(inputs[1000*n+split: 1000*(n+1), :, :, :]))
-            np.append(train_labels, np.array(labels[1000*n:1000*n+split, :]))
-            np.append(test_labels, np.array(labels[1000*n+split: 1000*(n+1), :]))
+            train_inputs = np.append(train_inputs, np.array(inputs[1000*n:1000*n+split, :, :, :]))
+            test_inputs = np.append(test_inputs, np.array(inputs[1000*n+split: 1000*(n+1), :, :, :]))
+            train_labels = np.append(train_labels, np.array(labels[1000*n:1000*n+split, :]))
+            test_labels = np.append(test_labels, np.array(labels[1000*n+split: 1000*(n+1), :]))
 
     print(len(train_inputs))
     print(len(test_inputs))
