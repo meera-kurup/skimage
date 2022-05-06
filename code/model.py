@@ -19,7 +19,7 @@ class Model(tf.keras.Model):
         # ### CNN from New Paper ###
         self.cnn = tf.keras.Sequential([
             InceptionV3(weights='imagenet', include_top=False, input_tensor=Input(shape=(image_size,image_size,3))),
-            GlobalAveragePooling2D(),
+            AveragePooling2D(),
             Dropout(0.4),
             Flatten(),
             Dense(self.num_classes)
