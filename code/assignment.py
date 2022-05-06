@@ -91,6 +91,7 @@ def visualize_loss(losses):
     plt.title('Loss per batch')
     plt.xlabel('Batch')
     plt.ylabel('Loss')
+    plt.savefig('../loss.png')
     plt.show()
 
 
