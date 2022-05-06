@@ -48,8 +48,11 @@ def train(model, train_inputs, train_labels):
             print("Loss after {} training steps: {}".format(b, loss))
             print("Accuracy after {} training steps: {}".format(b, accuracy))
         
+        print("0")
         gradients = tape.gradient(loss, model.trainable_variables)
+        print("1")
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+        print("2")
 
     return model.loss_list
 
