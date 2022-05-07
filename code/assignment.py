@@ -54,7 +54,11 @@ def train(model, train_inputs, train_labels):
             print(y_pred.shape)
             print(batch_labels.shape)
             # print(batch_labels.shape)
-            loss = model.loss(y_pred, batch_inputs)
+            if args.autoencoder:
+                loss = model.loss(y_pred, batch_inputs)
+            else:
+                loss = model.loss(y_pred, batch_labels)
+                
             model.loss_list.append(loss)
             # accuracy = model.accuracy(y_pred, batch_labels)
             # model.accuracy_list.append(accuracy)
