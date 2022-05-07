@@ -1,4 +1,4 @@
-from code.autoencoder import Autoencoder
+from autoencoder import Autoencoder
 from preprocess import get_data
 from model import Model
 from matplotlib import pyplot as plt
