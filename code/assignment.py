@@ -130,6 +130,8 @@ def main():
     # Train model
     model = Model(num_classes, image_size)
     autoencoder = Autoencoder(image_size)
+    autoencoder.build(input_shape = (64, 128, 128, 3)) 
+    autoencoder.summary()
     autoencoder.encoder.summary()
     autoencoder.decoder.summary()
     epochs = 50
