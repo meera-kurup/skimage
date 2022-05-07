@@ -9,7 +9,17 @@ import sys
 import random
 import math
 import time
+import argparse
 
+def parseArguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--load_weights", action="store_true")
+    # parser.add_argument("--batch_size", type=int, default=128)
+    # parser.add_argument("--num_epochs", type=int, default=50)
+    # parser.add_argument("--image_size", type=int, default=128*128)
+    parser.add_argument("--learning_rate", type=float, default=1e-3)
+    args = parser.parse_args()
+    return args
 
 def train(model, train_inputs, train_labels):
     '''
@@ -97,7 +107,43 @@ def visualize(title, list):
     plt.savefig('../results/' + title + "_" + timestamp + '.png')
     plt.close()
 
-def main():
+def save_model_weights(model, args):
+        """
+        Save trained model weights to model_ckpts/
+
+        Inputs:
+        - model: Trained model.
+        - args: All arguments.
+        """
+
+        output_path = os.path.join("model_ckpts")
+        os.makedirs("model_ckpts", exist_ok=True)
+        model.save_weights(output_path)
+
+def load_weights(model):
+    """
+    Load the trained model's weights.
+
+    Inputs:
+    - model: Your untrained model instance.
+
+    Returns:
+    - model: Trained model.
+    """
+
+    num_classes = model.num_classes
+
+    inputs = tf.zeros([1,1,model.image_size,model.image_size])  # Random data sample
+    labels = tf.constant([[0]])
+
+    weights_path = os.path.join("model_ckpts")
+    _ = model(inputs) # Initialize trainable parameters?
+    model.load_weights(weights_path) #Load weights?
+
+    return model
+
+
+def main(args):
     '''
     Read in data (limited to 5 classes), initialize model, and train and 
     test your model for a number of epochs.
@@ -147,6 +193,26 @@ def main():
     # Test model
     # accuracy = test(model, test_inputs, test_labels)
     # tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
+
+        # Load trained weights
+    # if args.load_weights:
+    #     model = load_weights(model)
+    # else:
+    #     epochs = 50
+    #     print("Training...")
+    #     for e in range(epochs):
+    #         print("Epoch: " + str(e+1) + "/" + str(epochs))
+    #         train(model, train_inputs, train_labels)
+
+    # Save graphs in results folder
+    # visualize("loss", model.loss_list)
+    # visualize("accuracy", model.accuracy_list)
+
+    # Test model
+    # accuracy = test(model, test_inputs, test_labels)
+    # tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
+
+    save_model_weights(model, args)
 
 if __name__ == '__main__':
     main()

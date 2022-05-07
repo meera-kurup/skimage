@@ -1,8 +1,15 @@
 import numpy as np
 import tensorflow as tf
+import io
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPool2D, GlobalAveragePooling2D, BatchNormalization, AveragePooling2D, Input
 from keras.applications.inception_v3 import InceptionV3
 from keras.regularizers import l2
+from PIL import Image
+from tqdm import tqdm
+from tf.keras.preprocessing.image import ImageDataGenerator
 
 class InputOptimizer(tf.keras.Model):
     '''
@@ -18,12 +25,12 @@ class InputOptimizer(tf.keras.Model):
         ## Save the model for which the inputs will be optimized for
         self.model = model
 
-        self.num_probs = output_shape[1]                    ## 10
-        self.opt_shape = [self.num_probs] + input_shape[1:] ## 10x28x28x1
+        self.num_probs = output_shape[1]                    ## 10 -> 5
+        self.opt_shape = [self.num_probs] + input_shape[1:] ## 10x28x28x1 -> 5 x image_size x image_size x 1
         
         ## Set of optimizable inputs; 10 28x28 images initialized to 0.
         self.opt_input = tf.Variable(tf.zeros(self.opt_shape))  
-        ## TODO: FIX THE VARIABLE INITIALIZATION (IF REQUIRED BY YOUR MODEL)
+        ## FIX THE VARIABLE INITIALIZATION (IF REQUIRED BY YOUR MODEL)
 
         ## Predictions to which our inputs are optimized for. nxn "eye"-dentity mtx
         self.opt_probs = tf.Variable(tf.eye(self.num_probs))
@@ -45,7 +52,7 @@ class InputOptimizer(tf.keras.Model):
         return img
 
 
-    def add_input_to_imgs(self, outputs, nrows=2, ncols=5, figsize=(10, 5)):
+    def add_input_to_imgs(self, outputs, nrows=1, ncols=5, figsize=(10, 5)):
         '''
         Plot the image samples in outputs in a pyplot figure and add the image 
         to the 'opt_imgs' list. Used to later generate a gif. 
@@ -57,29 +64,6 @@ class InputOptimizer(tf.keras.Model):
             ax.imshow(out_numpy, cmap='Greys')
         self.opt_imgs += [self.fig2img(fig)]
         plt.close(fig)
-
-
-    # ## FOR REFERENCE ONLY: DO NOT UNCOMMENT
-    # def train_step(self, data):
-    #     '''
-    #     Optional Train_Step Specification; This happens for every training bach
-    #     https://www.tensorflow.org/guide/keras/customizing_what_happens_in_fit
-    #     '''
-    #     x, y = data
-    #     with tf.GradientTape() as tape:
-    #         y_pred = self(x, training=True)  # Forward pass
-    #         # Compute the loss value (the loss function is configured in `compile()`)
-    #         loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
-
-    #     # Compute gradients
-    #     gradients = tape.gradient(loss, self.trainable_variables)
-    #     # Update weights
-    #     self.optimizer.apply_gradients(zip(gradients, self.trainable_variables))
-    #     # Update metrics (includes the metric that tracks the loss)
-    #     self.compiled_metrics.update_state(y, y_pred)
-    #     # Return a dict mapping metric names to current value
-    #     return {m.name: m.result() for m in self.metrics}
-
 
     def train(self, epochs, augment_fn=tf.identity):
         '''
@@ -99,7 +83,7 @@ class InputOptimizer(tf.keras.Model):
               y_pred = self.model(data, training = True)  # Forward pass
               loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
             ## 2. Optimize with the output loss with respect to the *input*
-            ##      HINT: gradient and apply_gradient expect a *list* of vars...
+            ##      HINT: gradient and apply_gradient expect a *list* of vars... 
             gradients = tape.gradient(loss, [self.opt_input])
             self.optimizer.apply_gradients(zip(gradients, [self.opt_input]))
             self.compiled_metrics.update_state(y, y_pred)
@@ -115,11 +99,30 @@ class InputOptimizer(tf.keras.Model):
 
 
 ## TODO: Augmentation pipeline to zooms and translates the images
-augment_fn = tf.keras.Sequential([ 
-          tf.keras.layers.RandomZoom(height_factor = 0.2, width_factor = 0.2),
-          tf.keras.layers.RandomTranslation(height_factor = 0.2, width_factor = 0.2)
+# augment_fn = tf.keras.Sequential([ 
+#           tf.keras.layers.RandomZoom(height_factor = 0.2, width_factor = 0.2),
+#           tf.keras.layers.RandomTranslation(height_factor = 0.2, width_factor = 0.2)
     
-], name='sequential')
+# ], name='sequential')
+
+augment_fn = ImageDataGenerator()
+
+train_datagen = ImageDataGenerator(featurewise_center=False,
+                 samplewise_center=False,
+                 featurewise_std_normalization=False,
+                 samplewise_std_normalization=False,
+                 zca_whitening=False,
+                 rotation_range=5,
+                 width_shift_range=0.05,
+                 height_shift_range=0.05,
+                 shear_range=0.2,
+                 zoom_range=0.2,
+                 channel_shift_range=0.,
+                 fill_mode='nearest',
+                 cval=0.,
+                 horizontal_flip=True,
+                 vertical_flip=False,
+                 rescale=1/255) #rescale to [0-1], add zoom range of 0.2x and horizontal flip
 
 # Instantiate our model
 input_opt_model = InputOptimizer(
@@ -135,4 +138,4 @@ input_opt_model.compile(
     run_eagerly = True
 )
 
-input_opt_model.train(epochs=70, augment_fn=augment_fn);
+input_opt_model.train(epochs=70, augment_fn=augment_fn)
