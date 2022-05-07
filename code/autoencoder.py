@@ -8,6 +8,7 @@ class Autoencoder(tf.keras.Model):
     def __init__(self, image_size):
         super(Autoencoder, self).__init__()
         self.image_size = image_size
+        self.batch_size = 64
         self.encoder = tf.keras.Sequential([
             Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(self.image_size,self.image_size,3)),
             # MaxPooling2D(pool_size=(2, 2)),
