@@ -39,7 +39,7 @@ def train(model, train_inputs, train_labels):
 
         with tf.GradientTape() as tape:
             y_pred = model.call(batch_inputs)
-            # print(y_pred.shape)
+            print(y_pred.shape)
             # print(batch_labels.shape)
             loss = model.loss(y_pred, batch_labels)
             model.loss_list.append(loss)
