@@ -1,3 +1,4 @@
+from code.autoencoder import Autoencoder
 from preprocess import get_data
 from model import Model
 from matplotlib import pyplot as plt
@@ -42,12 +43,12 @@ def train(model, train_inputs, train_labels):
             # print(batch_labels.shape)
             loss = model.loss(y_pred, batch_labels)
             model.loss_list.append(loss)
-            accuracy = model.accuracy(y_pred, batch_labels)
-            model.accuracy_list.append(accuracy)
+            # accuracy = model.accuracy(y_pred, batch_labels)
+            # model.accuracy_list.append(accuracy)
         
         if b % 50 == 0:
             print("Loss after {} training steps: {}".format(b, loss))
-            print("Accuracy after {} training steps: {}".format(b, accuracy))
+            # print("Accuracy after {} training steps: {}".format(b, accuracy))
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
@@ -127,19 +128,20 @@ def main():
 
     # Train model
     model = Model(num_classes, image_size)
+    autoencoder = Autoencoder(image_size)
     epochs = 50
     print("Training...")
     for e in range(epochs):
         print("Epoch: " + str(e+1) + "/" + str(epochs))
-        train(model, train_inputs, train_labels)
+        train(autoencoder, train_inputs, train_labels)
 
     # Save graphs in results folder
     visualize("loss", model.loss_list)
-    visualize("accuracy", model.accuracy_list)
+    # visualize("accuracy", model.accuracy_list)
 
     # Test model
-    accuracy = test(model, test_inputs, test_labels)
-    tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
+    # accuracy = test(model, test_inputs, test_labels)
+    # tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
 
 if __name__ == '__main__':
     main()
