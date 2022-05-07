@@ -130,14 +130,16 @@ def main():
     # Train model
     model = Model(num_classes, image_size)
     autoencoder = Autoencoder(image_size)
+    autoencoder.encoder.summary()
+    autoencoder.decoder.summary()
     epochs = 50
-    print("Training...")
-    for e in range(epochs):
-        print("Epoch: " + str(e+1) + "/" + str(epochs))
-        train(autoencoder, train_inputs, train_labels)
+    # print("Training...")
+    # for e in range(epochs):
+    #     print("Epoch: " + str(e+1) + "/" + str(epochs))
+    #     train(autoencoder, train_inputs, train_labels)
 
     # Save graphs in results folder
-    visualize("loss", model.loss_list)
+    # visualize("loss", model.loss_list)
     # visualize("accuracy", model.accuracy_list)
 
     # Test model
