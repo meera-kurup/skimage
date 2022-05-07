@@ -10,7 +10,7 @@ class Autoencoder(tf.keras.Model):
         self.image_size = image_size
         self.batch_size = 64
         self.loss_list = []
-        self.learning_rate = 0.0001
+        self.learning_rate = 0.001
         self.optimizer = tf.keras.optimizers.Adam(learning_rate = self.learning_rate)
         self.encoder = tf.keras.Sequential([
             Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(self.image_size,self.image_size,3)),
@@ -27,9 +27,9 @@ class Autoencoder(tf.keras.Model):
 
     @tf.function
     def call(self, inputs):
-        inputs = self.encoder(inputs)
-        inputs = self.decoder(inputs)
-        return inputs 
+        encoded_inputs = self.encoder(inputs)
+        decoded_inputs = self.decoder(encoded_inputs)
+        return decoded_inputs
         
     def loss(self, pred, labels, alpha=0.3):
         mse_loss = tf.keras.losses.MeanSquaredError() 

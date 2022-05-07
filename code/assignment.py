@@ -103,6 +103,21 @@ def visualize(title, list):
     timestamp = time.strftime("%Y%m%d_%H%M%S")
     plt.savefig('../results/' + title + "_" + timestamp + '.png')
     plt.close()
+    
+def view_autoencoder_results(inputs, model, num_classes, split):
+    fig = plt.figure(figsize=(8, 8))
+    
+    rows = 2
+    columns = num_classes
+    #original inputs
+    for i in range(num_classes):
+        img = np.ndarray(model.call(inputs[i*(1000-split)]))
+        img = np.squeeze(img)
+        fig.add_subplot(rows, columns, i)
+        plt.imshow(img)
+    timestamp = time.strftime("%Y%m%d_%H%M%S")
+    plt.savefig('../results/ae_' + timestamp + '.png')
+    plt.close()
 
 def save_model_weights(model):
         """
@@ -230,9 +245,9 @@ def main(args):
     if not args.autoencoder:
         visualize("accuracy", model.accuracy_list)
 
-    # Test model (test if weights are saving)
-    accuracy = test(model, test_inputs, test_labels)
-    tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
+        # Test model (test if weights are saving)
+        accuracy = test(model, test_inputs, test_labels)
+        tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
 
 if __name__ == '__main__':
     args = parseArguments()
