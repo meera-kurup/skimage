@@ -19,7 +19,7 @@ def parseArguments():
     parser.add_argument("--autoencoder", action="store_true")
     parser.add_argument("--input_opt", action="store_true")
     parser.add_argument("--learning_rate", type=float, default=1e-3)
-    parser.add_argument("--num_epochs", type=int, default=50)
+    parser.add_argument("--num_epochs", type=int, default=1)
     parser.add_argument("--weights", default=None, help='''Path to model weights file (should end with the extension .h5).''')
     args = parser.parse_args()
     return args
