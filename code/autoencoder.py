@@ -29,8 +29,8 @@ class Autoencoder(tf.keras.Model):
         inputs = self.decoder(inputs)
         return inputs 
         
-    def loss(self, loss, pred):
+    def loss(self, pred, labels, alpha=0.3):
         mse_loss = tf.keras.losses.MeanSquaredError() 
-        bce_loss = tf.keras.losses.BinaryCrossentropy()
+        bce_loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
         
-        return mse_loss(loss, pred) + bce_loss(loss, pred)
+        return (1-alpha)*mse_loss(labels, pred) + alpha*bce_loss(labels, pred)
