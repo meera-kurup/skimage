@@ -15,7 +15,6 @@ import argparse
 
 def parseArguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--load_weights", action="store_true")
     parser.add_argument("--autoencoder", action="store_true")
     parser.add_argument("--input_opt", action="store_true")
     parser.add_argument("--learning_rate", type=float, default=1e-3)
@@ -202,16 +201,20 @@ def main(args):
     # autoencoder.encoder.summary()
     # autoencoder.decoder.summary()
     else:
-        # Load trained weights
-        if args.load_weights:
-            model.load_weights(args.weights)
-        else:
+        if args.load_weights is None:
+            # Train model
             epochs = args.num_epochs
             print("Training...")
             for e in range(epochs):
                 print("Epoch: " + str(e+1) + "/" + str(epochs))
                 train(model, train_inputs, train_labels)
+
+            # Save weights
             save_model_weights(model)
+        else:
+            # Load weights from previous model
+            print("Loading from ", + args.load_weights)
+            model.load_weights(args.weights)
 
     ### Input Optimization ###
     if args.input_opt:
