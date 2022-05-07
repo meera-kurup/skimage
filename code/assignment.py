@@ -69,7 +69,7 @@ def train(model, train_inputs, train_labels):
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
-    print("Loss list", model.loss_list)
+    print("Loss list", model.loss)
     return model.loss_list
 
 def test(model, test_inputs, test_labels):
@@ -111,7 +111,7 @@ def view_autoencoder_results(inputs, model, num_classes, split):
     columns = num_classes
     #original inputs
     for i in range(num_classes):
-        img = np.ndarray(model.call(inputs[i*(1000-split)]))*225
+        img = np.ndarray(model.call(np.expand_dims(inputs[i*(1000-split)], axis=0)))*225
         img = np.squeeze(img)
         fig.add_subplot(rows, columns, i)
         plt.imshow(img)
