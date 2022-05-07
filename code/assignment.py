@@ -215,4 +215,5 @@ def main(args):
     save_model_weights(model, args)
 
 if __name__ == '__main__':
-    main()
+    args = parseArguments()
+    main(args)

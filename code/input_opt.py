@@ -105,9 +105,7 @@ class InputOptimizer(tf.keras.Model):
     
 # ], name='sequential')
 
-augment_fn = ImageDataGenerator()
-
-train_datagen = ImageDataGenerator(featurewise_center=False,
+augment_fn = ImageDataGenerator(featurewise_center=False,
                  samplewise_center=False,
                  featurewise_std_normalization=False,
                  samplewise_std_normalization=False,
