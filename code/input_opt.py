@@ -4,18 +4,19 @@ import io
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPool2D, GlobalAveragePooling2D, BatchNormalization, AveragePooling2D, Input
+from keras.preprocessing.image import ImageDataGenerator
 from keras.applications.inception_v3 import InceptionV3
 from keras.regularizers import l2
 from PIL import Image
 from tqdm import tqdm
-from tf.keras.preprocessing.image import ImageDataGenerator
 
 class InputOptimizer(tf.keras.Model):
     '''
     Optimizes inputs for a model
     '''
-    def __init__(self, model, input_shape, output_shape, **kwargs):
+    def __init__(self, model, num_probs, opt_shape, **kwargs):
         """
         Default constructor: Takes in a model to optimize for and example 
         input/output shapes of the model.
@@ -25,8 +26,8 @@ class InputOptimizer(tf.keras.Model):
         ## Save the model for which the inputs will be optimized for
         self.model = model
 
-        self.num_probs = output_shape[1]                    ## 10 -> 5
-        self.opt_shape = [self.num_probs] + input_shape[1:] ## 10x28x28x1 -> 5 x image_size x image_size x 1
+        self.num_probs = num_probs                   ## 10 -> 5
+        self.opt_shape = opt_shape ## 10x28x28x1 -> 5 x image_size x image_size x 1
         
         ## Set of optimizable inputs; 10 28x28 images initialized to 0.
         self.opt_input = tf.Variable(tf.zeros(self.opt_shape))  
@@ -105,32 +106,40 @@ class InputOptimizer(tf.keras.Model):
     
 # ], name='sequential')
 
-augment_fn = ImageDataGenerator(featurewise_center=False,
-                 samplewise_center=False,
-                 featurewise_std_normalization=False,
-                 samplewise_std_normalization=False,
-                 zca_whitening=False,
-                 rotation_range=5,
-                 width_shift_range=0.05,
-                 height_shift_range=0.05,
-                 shear_range=0.2,
-                 zoom_range=0.2,
-                 channel_shift_range=0.,
-                 fill_mode='nearest',
-                 cval=0.,
-                 horizontal_flip=True,
-                 vertical_flip=False,
-                 rescale=1/255) #rescale to [0-1], add zoom range of 0.2x and horizontal flip
+augment_fn = ImageDataGenerator(rotation_range=5,
+                    width_shift_range=0.2,
+                    height_shift_range=0.2,
+                    horizontal_flip=True,
+                    vertical_flip=False,
+                    fill_mode='reflect')
+# augment_fn = ImageDataGenerator(featurewise_center=False,
+#                  samplewise_center=False,
+#                  featurewise_std_normalization=False,
+#                  samplewise_std_normalization=False,
+#                  zca_whitening=False,
+#                  rotation_range=5,
+#                  width_shift_range=0.05,
+#                  height_shift_range=0.05,
+#                  shear_range=0.2,
+#                  zoom_range=0.2,
+#                  channel_shift_range=0.,
+#                  fill_mode='nearest',
+#                  cval=0.,
+#                  horizontal_flip=True,
+#                  vertical_flip=False,
+#                  rescale=1/255) #rescale to [0-1], add zoom range of 0.2x and horizontal flip
 
 # Instantiate our model
+opt_shape = model.num_classes, model.image_size, model.image_size, 3
+
 input_opt_model = InputOptimizer(
     model, 
-    input_shape  = X0[:,:,:,None].shape, 
-    output_shape = Y0.shape
+    num_probs = model.num_classes,
+    opt_shape = opt_shape
 )
 
 input_opt_model.compile(
-    optimizer   = tf.keras.optimizers.Adam(learning_rate=0.05),
+    optimizer   = tf.keras.optimizers.Adam(learning_rate=0.01),
     loss        = tf.keras.losses.CategoricalCrossentropy(),
     metrics     = [tf.keras.metrics.CategoricalAccuracy()],
     run_eagerly = True
