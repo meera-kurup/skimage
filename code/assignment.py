@@ -57,14 +57,15 @@ def train(model, train_inputs, train_labels):
                 loss = model.loss(y_pred, batch_inputs)
             else:
                 loss = model.loss(y_pred, batch_labels)
+                accuracy = model.accuracy(y_pred, batch_labels)
+                model.accuracy_list.append(accuracy)
                 
             model.loss_list.append(loss)
-            # accuracy = model.accuracy(y_pred, batch_labels)
-            # model.accuracy_list.append(accuracy)
         
         if b % 50 == 0:
             print("Loss after {} training steps: {}".format(b, loss))
-            # print("Accuracy after {} training steps: {}".format(b, accuracy))
+            if not args.autoencoder:
+                print("Accuracy after {} training steps: {}".format(b, accuracy))
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
@@ -120,9 +121,10 @@ def save_model_weights(model):
         - model: Trained model.
         - args: All arguments.
         """
-
-        output_path = os.path.join("model_ckpts")
+        output_dir = os.path.join("model_ckpts")
+        output_path = os.path.join(output_dir, "cnn")
         os.makedirs("model_ckpts", exist_ok=True)
+        os.makedirs(output_dir, exist_ok=True)
         model.save_weights(output_path)
 
 def load_weights(model):
@@ -141,7 +143,7 @@ def load_weights(model):
     inputs = tf.zeros([1,1,model.image_size,model.image_size])  # Random data sample
     labels = tf.constant([[0]])
 
-    weights_path = os.path.join("model_ckpts")
+    weights_path = os.path.join("model_ckpts", "cnn")
     _ = model(inputs) # Initialize trainable parameters?
     model.load_weights(weights_path) #Load weights?
 
