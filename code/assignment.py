@@ -112,31 +112,33 @@ def save_model_weights(model):
         - model: Trained model.
         - args: All arguments.
         """
-        output_dir = os.path.join("model_ckpts")
+        output_dir = os.path.join("../model_ckpts")
         timestamp = time.strftime("%Y%m%d_%H%M%S")
         output_path = os.path.join(output_dir, timestamp)
-        os.makedirs("model_ckpts", exist_ok=True)
+        os.makedirs("../model_ckpts", exist_ok=True)
         # os.makedirs(output_dir, exist_ok=True)
         model.save_weights(output_path)
+        print("Saved in " + output_path)
 
-def load_weights(model, weights_path):
-    """
-    Load the trained model's weights.
+# def load_weights(model, weights_path):
+#     """
+#     Load the trained model's weights.
 
-    Inputs:
-    - model: Your untrained model instance.
+#     Inputs:
+#     - model: Your untrained model instance.
 
-    Returns:
-    - model: Trained model.
-    """
+#     Returns:
+#     - model: Trained model.
+#     """
+#     print("Loading from " + weights_path)
 
-    inputs = tf.zeros([1,1,model.image_size,model.image_size])  # Random data sample
-    labels = tf.constant([[0]])
+#     inputs = tf.zeros([1,1,model.image_size,model.image_size])  # Random data sample
+#     labels = tf.constant([[0]])
 
-    _ = model(inputs) # Initialize trainable parameters?
-    model.load_weights(args.weights) #Load weights?
+#     _ = model(inputs) # Initialize trainable parameters?
+#     model.load_weights(args.weights) #Load weights?
 
-    return model
+#     return model
 
 
 def main(args):
@@ -187,7 +189,7 @@ def main(args):
     else:
         # Load trained weights
         if args.load_weights:
-            model = load_weights(model, args.weights)
+            model.load_weights(args.weights)
         else:
             epochs = args.num_epochs
             print("Training...")
