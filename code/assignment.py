@@ -1,4 +1,6 @@
 from autoencoder import Autoencoder
+from input_opt import InputOptimizer
+from keras.preprocessing.image import ImageDataGenerator
 from preprocess import get_data
 from model import Model
 from matplotlib import pyplot as plt
@@ -14,9 +16,8 @@ import argparse
 def parseArguments():
     parser = argparse.ArgumentParser()
     parser.add_argument("--load_weights", action="store_true")
-    # parser.add_argument("--batch_size", type=int, default=128)
-    # parser.add_argument("--num_epochs", type=int, default=50)
-    # parser.add_argument("--image_size", type=int, default=128*128)
+    parser.add_argument("--autoencoder", action="store_true")
+    parser.add_argument("--input_opt", action="store_true")
     parser.add_argument("--learning_rate", type=float, default=1e-3)
     args = parser.parse_args()
     return args
@@ -107,7 +108,7 @@ def visualize(title, list):
     plt.savefig('../results/' + title + "_" + timestamp + '.png')
     plt.close()
 
-def save_model_weights(model, args):
+def save_model_weights(model):
         """
         Save trained model weights to model_ckpts/
 
@@ -173,18 +174,58 @@ def main(args):
             train_labels = np.append(train_labels, np.array(labels[1000*n:1000*n+split, :]), axis = 0)
             test_labels = np.append(test_labels, np.array(labels[1000*n+split: 1000*(n+1), :]), axis = 0)
 
-    # Train model
-    model = Model(num_classes, image_size)
-    autoencoder = Autoencoder(image_size)
+    ### Autoencoder ###
+    if args.autoencoder:
+        model = Model(num_classes, image_size)
+        autoencoder = Autoencoder(image_size)
+
+        epochs = 50
+        print("Training...")
+        for e in range(epochs):
+            print("Epoch: " + str(e+1) + "/" + str(epochs))
+            train(autoencoder, train_inputs, train_labels)
     # autoencoder.build(input_shape = (64, 128, 128, 3)) 
     # autoencoder.summary()
     # autoencoder.encoder.summary()
     # autoencoder.decoder.summary()
-    epochs = 50
-    print("Training...")
-    for e in range(epochs):
-        print("Epoch: " + str(e+1) + "/" + str(epochs))
-        train(autoencoder, train_inputs, train_labels)
+    else:
+        # Load trained weights
+        if args.load_weights:
+            model = load_weights(model)
+        else:
+            epochs = 50
+            print("Training...")
+            for e in range(epochs):
+                print("Epoch: " + str(e+1) + "/" + str(epochs))
+                train(model, train_inputs, train_labels)
+            save_model_weights(model)
+
+    ### Input Optimization ###
+    if args.input_opt:
+        augment_fn = ImageDataGenerator(rotation_range=5,
+                        width_shift_range=0.2,
+                        height_shift_range=0.2,
+                        horizontal_flip=True,
+                        vertical_flip=False,
+                        fill_mode='reflect')
+                        
+        opt_shape = model.num_classes, model.image_size, model.image_size, 3
+
+        input_opt_model = InputOptimizer(
+            model, 
+            num_probs = model.num_classes,
+            opt_shape = opt_shape
+        )
+
+        input_opt_model.compile(
+            optimizer   = tf.keras.optimizers.Adam(learning_rate=0.01),
+            loss        = tf.keras.losses.CategoricalCrossentropy(),
+            metrics     = [tf.keras.metrics.CategoricalAccuracy()],
+            run_eagerly = True
+        )
+
+        input_opt_model.train(epochs=10, augment_fn=augment_fn)
+    
 
     # Save graphs in results folder
     visualize("loss", model.loss_list)
@@ -193,26 +234,6 @@ def main(args):
     # Test model
     # accuracy = test(model, test_inputs, test_labels)
     # tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
-
-        # Load trained weights
-    # if args.load_weights:
-    #     model = load_weights(model)
-    # else:
-    #     epochs = 50
-    #     print("Training...")
-    #     for e in range(epochs):
-    #         print("Epoch: " + str(e+1) + "/" + str(epochs))
-    #         train(model, train_inputs, train_labels)
-
-    # Save graphs in results folder
-    # visualize("loss", model.loss_list)
-    # visualize("accuracy", model.accuracy_list)
-
-    # Test model
-    # accuracy = test(model, test_inputs, test_labels)
-    # tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
-
-    save_model_weights(model, args)
 
 if __name__ == '__main__':
     args = parseArguments()

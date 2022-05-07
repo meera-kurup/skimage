@@ -5,10 +5,6 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 
-from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPool2D, GlobalAveragePooling2D, BatchNormalization, AveragePooling2D, Input
-from keras.preprocessing.image import ImageDataGenerator
-from keras.applications.inception_v3 import InceptionV3
-from keras.regularizers import l2
 from PIL import Image
 from tqdm import tqdm
 
@@ -106,12 +102,7 @@ class InputOptimizer(tf.keras.Model):
     
 # ], name='sequential')
 
-augment_fn = ImageDataGenerator(rotation_range=5,
-                    width_shift_range=0.2,
-                    height_shift_range=0.2,
-                    horizontal_flip=True,
-                    vertical_flip=False,
-                    fill_mode='reflect')
+
 # augment_fn = ImageDataGenerator(featurewise_center=False,
 #                  samplewise_center=False,
 #                  featurewise_std_normalization=False,
@@ -129,20 +120,3 @@ augment_fn = ImageDataGenerator(rotation_range=5,
 #                  vertical_flip=False,
 #                  rescale=1/255) #rescale to [0-1], add zoom range of 0.2x and horizontal flip
 
-# Instantiate our model
-opt_shape = model.num_classes, model.image_size, model.image_size, 3
-
-input_opt_model = InputOptimizer(
-    model, 
-    num_probs = model.num_classes,
-    opt_shape = opt_shape
-)
-
-input_opt_model.compile(
-    optimizer   = tf.keras.optimizers.Adam(learning_rate=0.01),
-    loss        = tf.keras.losses.CategoricalCrossentropy(),
-    metrics     = [tf.keras.metrics.CategoricalAccuracy()],
-    run_eagerly = True
-)
-
-input_opt_model.train(epochs=70, augment_fn=augment_fn)
