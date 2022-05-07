@@ -19,6 +19,7 @@ def parseArguments():
     parser.add_argument("--autoencoder", action="store_true")
     parser.add_argument("--input_opt", action="store_true")
     parser.add_argument("--learning_rate", type=float, default=1e-3)
+    parser.add_argument("--num_epochs", type=int, default=50)
     args = parser.parse_args()
     return args
 
@@ -78,16 +79,16 @@ def test(model, test_inputs, test_labels):
     :return: test accuracy - this should be the average accuracy across
     all batches
     """
-    # model_accuracy = 0
-    # print("Entering Test")
+    model_accuracy = 0
+    print("Entering Test")
 
-    # for i in range(0, len(test_inputs), model.batch_size):
-    #     input_batches = test_inputs[i:i+model.batch_size,:]
-    #     label_batches = test_labels[i:i+model.batch_size,:]
-    #     logits = model.call(input_batches)
-    #     model_accuracy += model.accuracy(logits, label_batches)
-    # batch_num = int(len(test_inputs)) / model.batch_size
-    # avg_accuracy = float(model_accuracy/batch_num)
+    for i in range(0, len(test_inputs), model.batch_size):
+        input_batches = test_inputs[i:i+model.batch_size,:]
+        label_batches = test_labels[i:i+model.batch_size,:]
+        logits = model.call(input_batches)
+        model_accuracy += model.accuracy(logits, label_batches)
+    batch_num = int(len(test_inputs)) / model.batch_size
+    avg_accuracy = float(model_accuracy/batch_num)
 
     return model.accuracy(model.call(test_inputs), test_labels)
 
@@ -174,12 +175,13 @@ def main(args):
             train_labels = np.append(train_labels, np.array(labels[1000*n:1000*n+split, :]), axis = 0)
             test_labels = np.append(test_labels, np.array(labels[1000*n+split: 1000*(n+1), :]), axis = 0)
 
+    model = Model(num_classes, image_size)
+
     ### Autoencoder ###
     if args.autoencoder:
-        model = Model(num_classes, image_size)
         autoencoder = Autoencoder(image_size)
 
-        epochs = 50
+        epochs = args.num_epochs
         print("Training...")
         for e in range(epochs):
             print("Epoch: " + str(e+1) + "/" + str(epochs))
@@ -193,7 +195,7 @@ def main(args):
         if args.load_weights:
             model = load_weights(model)
         else:
-            epochs = 50
+            epochs = args.num_epochs
             print("Training...")
             for e in range(epochs):
                 print("Epoch: " + str(e+1) + "/" + str(epochs))
@@ -231,9 +233,9 @@ def main(args):
     visualize("loss", model.loss_list)
     # visualize("accuracy", model.accuracy_list)
 
-    # Test model
-    # accuracy = test(model, test_inputs, test_labels)
-    # tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
+    # Test model (test if weights are saving)
+    accuracy = test(model, test_inputs, test_labels)
+    tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
 
 if __name__ == '__main__':
     args = parseArguments()
