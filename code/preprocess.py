@@ -71,7 +71,7 @@ def get_data(img_file, labels_file, image_size):
 	# inputs = tf.transpose(inputs, perm=[0,2,3,1])
 	img = Image.fromarray(inputs[0], 'RGB')
 	img.show()
-	inputs = inputs/255
+	# inputs = inputs/255
 	# test_inputs = np.float32(test_inputs/255)
 	# One-hot encoding for labels 
 	d_str = np.unique(labels)
