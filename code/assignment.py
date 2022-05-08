@@ -137,7 +137,7 @@ def save_model_weights(model):
         output_path = os.path.join(output_dir, timestamp)
         os.makedirs("../model_ckpts", exist_ok=True)
         # os.makedirs(output_dir, exist_ok=True)
-        model.save_weights(output_path)
+        model.save_weights(output_path, save_format="h5")
         print("Saved in " + output_path)
 
 def load_weights(model, weights_path):
