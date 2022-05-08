@@ -139,25 +139,25 @@ def save_model_weights(model):
         model.save_weights(output_path)
         print("Saved in " + output_path)
 
-# def load_weights(model, weights_path):
-#     """
-#     Load the trained model's weights.
+def load_weights(model, weights_path):
+    """
+    Load the trained model's weights.
 
-#     Inputs:
-#     - model: Your untrained model instance.
+    Inputs:
+    - model: Your untrained model instance.
 
-#     Returns:
-#     - model: Trained model.
-#     """
-#     print("Loading from " + weights_path)
+    Returns:
+    - model: Trained model.
+    """
+    print("Loading from " + weights_path)
 
-#     inputs = tf.zeros([1,1,model.image_size,model.image_size])  # Random data sample
-#     labels = tf.constant([[0]])
+    inputs = tf.zeros([1,3,model.image_size,model.image_size])  # Random data sample
+    labels = tf.constant([[0]])
 
-#     _ = model(inputs) # Initialize trainable parameters?
-#     model.load_weights(args.weights) #Load weights?
+    _ = model(inputs) # Initialize trainable parameters?
+    model.load_weights(args.weights) #Load weights?
 
-#     return model
+    return model
 
 
 def main(args):
@@ -205,25 +205,19 @@ def main(args):
     # autoencoder.decoder.summary()
     else:
         model = Model(num_classes, image_size)
-        epochs = args.num_epochs
-        print("Training...")
-        for e in range(epochs):
-            print("Epoch: " + str(e+1) + "/" + str(epochs))
-            train(model, train_inputs, train_labels)
-        # if args.load_weights is None:
-        #     # Train model
-        #     epochs = args.num_epochs
-        #     print("Training...")
-        #     for e in range(epochs):
-        #         print("Epoch: " + str(e+1) + "/" + str(epochs))
-        #         train(model, train_inputs, train_labels)
+        if args.weights is None:
+            # Train model
+            epochs = args.num_epochs
+            print("Training...")
+            for e in range(epochs):
+                print("Epoch: " + str(e+1) + "/" + str(epochs))
+                train(model, train_inputs, train_labels)
 
-        #     # Save weights
-        #     save_model_weights(model)
-        # else:
-        #     # Load weights from previous model
-        #     print("Loading from ", + args.load_weights)
-        #     model.load_weights(args.weights)
+            # Save weights
+            save_model_weights(model)
+        else:
+            # Load weights from previous model
+            load_weights(model, args.weights)
 
     ### Input Optimization ###
     if args.input_opt:
