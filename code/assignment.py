@@ -111,6 +111,7 @@ def view_autoencoder_results(inputs, model, num_classes, split):
     rows = 2
     columns = num_classes
     #original inputs
+    print(inputs.shape)
     for i in range(1, num_classes+1):
         # img = model.call(np.expand_dims(inputs[i*(1000-split)], axis=0))
         img = np.expand_dims(inputs[i*(1000-split)], axis=0)
