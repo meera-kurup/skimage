@@ -59,7 +59,7 @@ class InputOptimizer(tf.keras.Model):
             ax.set_title(f'Ideal for {i}')
             out_numpy = outputs[i].numpy()
             # out_numpy = np.squeeze(outputs[i].numpy(), -1)
-            # print(out_numpy)
+            print(out_numpy)
             # print(out_numpy.shape)
             # ax.imshow(out_numpy, vmin = -1, vmax = 1)
             ax.imshow((out_numpy * 255).astype(np.uint8))
