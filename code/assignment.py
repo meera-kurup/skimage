@@ -44,7 +44,7 @@ def train(model, train_inputs, train_labels):
     train_labels_shuffled = tf.gather(train_labels, indicies)
     num_batches = int(len(train_inputs)/model.batch_size)
 
-    for b in range(num_batches):
+    for b in range(1):
         batch_inputs = train_inputs_shuffled[model.batch_size*b: model.batch_size*(b+1)]
         batch_inputs = tf.image.random_flip_left_right(batch_inputs)
         batch_labels = train_labels_shuffled[model.batch_size*b: model.batch_size*(b+1)]
@@ -111,7 +111,7 @@ def view_autoencoder_results(inputs, model, num_classes, split):
     rows = 2
     columns = num_classes
     #original inputs
-    for i in range(num_classes):
+    for i in range(1, num_classes+1):
         inputs[i*(1000-split)]
         np.expand_dims(inputs[i*(1000-split)], axis=0)
         model.call(np.expand_dims(inputs[i*(1000-split)], axis=0))
