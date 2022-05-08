@@ -16,11 +16,13 @@ class Autoencoder(tf.keras.Model):
             Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(self.image_size,self.image_size,3)),
             # MaxPooling2D(pool_size=(2, 2)),
             Conv2D(64, kernel_size=(3, 3), activation='relu'),
+            Conv2D(64, kernel_size=(3, 3), activation='relu'),
             # MaxPooling2D(pool_size=(2, 2))
             ])
         
         self.decoder = tf.keras.Sequential([
             # MaxUnpooling2D(pool_size=(2, 2)),
+            Conv2DTranspose(64, kernel_size=(3, 3), activation='relu'),
             Conv2DTranspose(64, kernel_size=(3, 3), activation='relu'),
             # MaxUnpooling2D(pool_size=(2, 2)),
             Conv2DTranspose(3, kernel_size=(3, 3), activation='relu')])

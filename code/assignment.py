@@ -18,7 +18,7 @@ def parseArguments():
     parser.add_argument("--autoencoder", action="store_true")
     parser.add_argument("--input_opt", action="store_true")
     parser.add_argument("--learning_rate", type=float, default=1e-3)
-    parser.add_argument("--num_epochs", type=int, default=1)
+    parser.add_argument("--num_epochs", type=int, default=50)
     parser.add_argument("--weights", default=None, help='''Path to model weights file (should end with the extension .h5).''')
     args = parser.parse_args()
     return args
@@ -44,7 +44,7 @@ def train(model, train_inputs, train_labels):
     train_labels_shuffled = tf.gather(train_labels, indicies)
     num_batches = int(len(train_inputs)/model.batch_size)
 
-    for b in range(1):
+    for b in range(num_batches)):
         batch_inputs = train_inputs_shuffled[model.batch_size*b: model.batch_size*(b+1)]
         batch_inputs = tf.image.random_flip_left_right(batch_inputs)
         batch_labels = train_labels_shuffled[model.batch_size*b: model.batch_size*(b+1)]
