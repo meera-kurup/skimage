@@ -69,7 +69,7 @@ def train(model, train_inputs, train_labels):
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
-    print("Loss list", model.loss)
+    print("Loss list", model.loss_list)
     return model.loss_list
 
 def test(model, test_inputs, test_labels):
@@ -253,7 +253,8 @@ def main(args):
         accuracy = test(model, test_inputs, test_labels)
         tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
     else:
-        view_autoencoder_results(inputs, model, num_classes, split)
+        # view_autoencoder_results(inputs, model, num_classes, split)
+        pass
 
 if __name__ == '__main__':
     args = parseArguments()
