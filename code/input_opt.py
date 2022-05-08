@@ -57,7 +57,8 @@ class InputOptimizer(tf.keras.Model):
         fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
         for i, ax in enumerate(axs.reshape(-1)):
             ax.set_title(f'Ideal for {i}')
-            out_numpy = np.squeeze(outputs[i].numpy(), -1)
+            out_numpy = outputs[i].numpy()
+            # out_numpy = np.squeeze(outputs[i].numpy(), -1)
             ax.imshow(out_numpy, cmap='Greys')
         self.opt_imgs += [self.fig2img(fig)]
         plt.close(fig)
