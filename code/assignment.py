@@ -112,10 +112,8 @@ def view_autoencoder_results(inputs, model, num_classes, split):
     columns = num_classes
     #original inputs
     for i in range(1, num_classes+1):
-        inputs[i*(1000-split)]
-        np.expand_dims(inputs[i*(1000-split)], axis=0)
-        model.call(np.expand_dims(inputs[i*(1000-split)], axis=0))
-        img = model.call(np.expand_dims(inputs[i*(1000-split)], axis=0))
+        # img = model.call(np.expand_dims(inputs[i*(1000-split)], axis=0))
+        img = inputs[i*(1000-split)]
         img = tf.transpose(img, perm=[0,2,3,1])
         img = tf.reshape(img, (-1, 3, 128, 128))*255
         print(img)
