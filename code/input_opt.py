@@ -26,7 +26,7 @@ class InputOptimizer(tf.keras.Model):
         self.opt_shape = opt_shape ## 10x28x28x1 -> 5 x image_size x image_size x 1
         
         ## Set of optimizable inputs; 10 28x28 images initialized to 0.
-        self.opt_input = tf.Variable(tf.zeros(self.opt_shape))  
+        self.opt_input = tf.Variable(tf.zeros(self.opt_shape), dtype=np.float32)
         ## FIX THE VARIABLE INITIALIZATION (IF REQUIRED BY YOUR MODEL)
 
         ## Predictions to which our inputs are optimized for. nxn "eye"-dentity mtx
@@ -59,10 +59,10 @@ class InputOptimizer(tf.keras.Model):
             ax.set_title(f'Ideal for {i}')
             out_numpy = outputs[i].numpy()
             # out_numpy = np.squeeze(outputs[i].numpy(), -1)
-            print(out_numpy)
-            print(out_numpy.shape)
-            ax.imshow(out_numpy, vmin = -1, vmax = 1)
-            print("im-showed")
+            # print(out_numpy)
+            # print(out_numpy.shape)
+            # ax.imshow(out_numpy, vmin = -1, vmax = 1)
+            ax.imshow((out_numpy * 255).astype(np.uint8))
         self.opt_imgs += [self.fig2img(fig)]
         plt.close(fig)
 
