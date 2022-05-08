@@ -258,8 +258,7 @@ def main(args):
         accuracy = test(model, test_inputs, test_labels)
         tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
     else:
-        # view_autoencoder_results(inputs, model, num_classes, split)
-        pass
+        view_autoencoder_results(inputs, model, num_classes, split)
 
 if __name__ == '__main__':
     args = parseArguments()
