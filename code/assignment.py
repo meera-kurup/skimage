@@ -115,7 +115,7 @@ def view_autoencoder_results(inputs, model, num_classes, split):
         # img = model.call(np.expand_dims(inputs[i*(1000-split)], axis=0))
         img = np.expand_dims(inputs[i*(1000-split)], axis=0)
         img = tf.transpose(img, perm=[0,2,3,1])
-        img = tf.reshape(img, (-1, 3, 128, 128))*255
+        img = tf.reshape(img, (128, 128, 3))*255
         print(img)
         img = np.squeeze(img)
         fig.add_subplot(rows, columns, i)
