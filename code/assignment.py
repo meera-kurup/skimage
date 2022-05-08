@@ -117,11 +117,8 @@ def view_autoencoder_results(inputs, model, num_classes, split):
         img = inputs[i*(1000-split)]
         img = tf.dtypes.cast(img, tf.float64)
         img = np.expand_dims(img, axis=0)
-        print(img.shape)
         img = tf.transpose(img, perm=[0,3,1,2])
         img = tf.reshape(img, (128, 128, 3))
-        print(img)
-        # img = np.squeeze(img)
         fig.add_subplot(rows, columns, i)
         plt.imshow(img)
     timestamp = time.strftime("%Y%m%d_%H%M%S")
@@ -260,7 +257,7 @@ def main(args):
         accuracy = test(model, test_inputs, test_labels)
         tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
     else:
-        view_autoencoder_results(inputs, model, num_classes, split)
+        view_autoencoder_results(test_inputs, model, num_classes, split)
 
 if __name__ == '__main__':
     args = parseArguments()
