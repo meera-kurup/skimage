@@ -202,20 +202,25 @@ def main(args):
     # autoencoder.encoder.summary()
     # autoencoder.decoder.summary()
     else:
-        if args.load_weights is None:
-            # Train model
-            epochs = args.num_epochs
-            print("Training...")
-            for e in range(epochs):
-                print("Epoch: " + str(e+1) + "/" + str(epochs))
-                train(model, train_inputs, train_labels)
+        epochs = args.num_epochs
+        print("Training...")
+        for e in range(epochs):
+            print("Epoch: " + str(e+1) + "/" + str(epochs))
+            train(model, train_inputs, train_labels)
+        # if args.load_weights is None:
+        #     # Train model
+        #     epochs = args.num_epochs
+        #     print("Training...")
+        #     for e in range(epochs):
+        #         print("Epoch: " + str(e+1) + "/" + str(epochs))
+        #         train(model, train_inputs, train_labels)
 
-            # Save weights
-            save_model_weights(model)
-        else:
-            # Load weights from previous model
-            print("Loading from ", + args.load_weights)
-            model.load_weights(args.weights)
+        #     # Save weights
+        #     save_model_weights(model)
+        # else:
+        #     # Load weights from previous model
+        #     print("Loading from ", + args.load_weights)
+        #     model.load_weights(args.weights)
 
     ### Input Optimization ###
     if args.input_opt:
