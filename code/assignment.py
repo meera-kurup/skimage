@@ -60,8 +60,8 @@ def train(model, train_inputs, train_labels):
                 accuracy = model.accuracy(y_pred, batch_labels)
                 model.accuracy_list.append(accuracy)
                 
-            model.loss_list.append(loss.numpy())
-        
+            model.loss_list = model.loss_list.append(loss.numpy())
+
         if b % 50 == 0:
             print("Loss after {} training steps: {}".format(b, loss))
             if not args.autoencoder:
@@ -187,22 +187,21 @@ def main(args):
             train_labels = np.append(train_labels, np.array(labels[1000*n:1000*n+split, :]), axis = 0)
             test_labels = np.append(test_labels, np.array(labels[1000*n+split: 1000*(n+1), :]), axis = 0)
 
-    model = Model(num_classes, image_size)
-
     ### Autoencoder ###
     if args.autoencoder:
-        autoencoder = Autoencoder(image_size)
+        model = Autoencoder(image_size)
 
         epochs = args.num_epochs
         print("Training...")
         for e in range(epochs):
             print("Epoch: " + str(e+1) + "/" + str(epochs))
-            train(autoencoder, train_inputs, train_labels)
+            train(model, train_inputs, train_labels)
     # autoencoder.build(input_shape = (64, 128, 128, 3)) 
     # autoencoder.summary()
     # autoencoder.encoder.summary()
     # autoencoder.decoder.summary()
     else:
+        model = Model(num_classes, image_size)
         epochs = args.num_epochs
         print("Training...")
         for e in range(epochs):
@@ -249,7 +248,7 @@ def main(args):
 
         input_opt_model.train(epochs=10, augment_fn=augment_fn)
     
-
+    print(model.loss_list)
     # Save graphs in results folder
     visualize("loss", model.loss_list)
     if not args.autoencoder:
