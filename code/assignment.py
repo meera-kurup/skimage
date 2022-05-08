@@ -119,7 +119,7 @@ def view_autoencoder_results(inputs, model, num_classes, split):
     #original inputs
     print(inputs.shape)
     for i in range(1, num_classes+1):
-        original_img = inputs[i*(1000-split)]
+        original_img = inputs[i*(1000-split)-1]
         original_img = np.expand_dims(original_img, axis=0)
         
         ae_img = model.call(original_img)
