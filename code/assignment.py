@@ -117,7 +117,7 @@ def view_autoencoder_results(inputs, model, num_classes, split):
         img = tf.transpose(img, perm=[0,2,3,1])
         img = tf.reshape(img, (128, 128, 3))*255
         print(img)
-        img = np.squeeze(img)
+        # img = np.squeeze(img)
         fig.add_subplot(rows, columns, i)
         plt.imshow(img)
     timestamp = time.strftime("%Y%m%d_%H%M%S")
