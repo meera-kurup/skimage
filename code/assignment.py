@@ -60,7 +60,7 @@ def train(model, train_inputs, train_labels):
                 accuracy = model.accuracy(y_pred, batch_labels)
                 model.accuracy_list.append(accuracy)
                 
-            model.loss_list = model.loss_list.append(loss.numpy())
+            model.loss_list.append(loss.numpy())
 
         if b % 50 == 0:
             print("Loss after {} training steps: {}".format(b, loss))
