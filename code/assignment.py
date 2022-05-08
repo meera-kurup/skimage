@@ -112,6 +112,9 @@ def view_autoencoder_results(inputs, model, num_classes, split):
     columns = num_classes
     #original inputs
     for i in range(num_classes):
+        inputs[i*(1000-split)]
+        np.expand_dims(inputs[i*(1000-split)], axis=0)
+        model.call(np.expand_dims(inputs[i*(1000-split)], axis=0))
         img = np.ndarray(model.call(np.expand_dims(inputs[i*(1000-split)], axis=0)))*225
         img = np.squeeze(img)
         fig.add_subplot(rows, columns, i)
