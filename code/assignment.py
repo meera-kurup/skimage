@@ -250,7 +250,7 @@ def main(args):
             RandomZoom(height_factor = 0.2, width_factor = 0.2),
             RandomTranslation(height_factor = 0.2, width_factor = 0.2),
             RandomRotation(factor=(-0.125, 0.125)),
-            RandomFlip('horizontal')
+            RandomFlip()
             ], name='sequential')
                         
         opt_shape = (model.num_classes, model.image_size, model.image_size, 3)
