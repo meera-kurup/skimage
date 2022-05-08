@@ -59,7 +59,7 @@ class InputOptimizer(tf.keras.Model):
             ax.set_title(f'Ideal for {i}')
             out_numpy = outputs[i].numpy()
             # out_numpy = np.squeeze(outputs[i].numpy(), -1)
-            print(out_numpy)
+            #print(out_numpy)
             # print(out_numpy.shape)
             # ax.imshow(out_numpy, vmin = -1, vmax = 1)
             # ax.imshow((out_numpy * 255).astype(np.uint8))
@@ -83,7 +83,7 @@ class InputOptimizer(tf.keras.Model):
               data = augment_fn(self.opt_input)
               y = self.opt_probs
               y_pred = self.model(data)  # Forward pass
-              print(y_pred)
+              #print(y_pred)
               loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
             ## 2. Optimize with the output loss with respect to the *input*
             ##      HINT: gradient and apply_gradient expect a *list* of vars... 
