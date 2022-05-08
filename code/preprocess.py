@@ -93,6 +93,7 @@ def get_data(img_file, labels_file, image_size):
 	processed_inputs = np.array(processed_inputs/255)
 	processed_inputs = tf.reshape(processed_inputs, (-1, 3, image_size, image_size))
 	processed_inputs = tf.transpose(processed_inputs, perm=[0,2,3,1])
+	print(processed_inputs.dtype)
 	processed_inputs = tf.dtypes.cast(processed_inputs, tf.float32)
 
 	# first_class = 11
