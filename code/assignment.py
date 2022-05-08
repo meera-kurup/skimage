@@ -118,7 +118,7 @@ def view_autoencoder_results(inputs, model, num_classes, split):
         img = tf.dtypes.cast(img, tf.float64)
         img = np.expand_dims(img, axis=0)
         print(img.shape)
-        img = tf.transpose(img, perm=[0,2,3,1])
+        img = tf.transpose(img, perm=[0,3,1,2])
         img = tf.reshape(img, (128, 128, 3))
         print(img)
         # img = np.squeeze(img)
