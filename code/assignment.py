@@ -152,7 +152,7 @@ def load_weights(model, weights_path):
     """
     print("Loading from " + weights_path)
 
-    inputs = tf.zeros([1,3,model.image_size,model.image_size])  # Random data sample
+    inputs = tf.zeros([1,model.image_size,model.image_size, 3])  # Random data sample
     labels = tf.constant([[0]])
 
     _ = model(inputs) # Initialize trainable parameters?
