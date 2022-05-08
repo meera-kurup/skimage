@@ -96,6 +96,7 @@ def visualize(title, list):
     :return: doesn't return anything, a plot should pop-up and save.
     """
     x = [i for i in range(len(list))]
+    print(x)
     plt.plot(x, list)
     plt.title(title + ' per batch')
     plt.xlabel('Batch')
