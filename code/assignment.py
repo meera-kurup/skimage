@@ -44,7 +44,7 @@ def train(model, train_inputs, train_labels):
     train_labels_shuffled = tf.gather(train_labels, indicies)
     num_batches = int(len(train_inputs)/model.batch_size)
 
-    for b in range(num_batches)):
+    for b in range(num_batches):
         batch_inputs = train_inputs_shuffled[model.batch_size*b: model.batch_size*(b+1)]
         batch_inputs = tf.image.random_flip_left_right(batch_inputs)
         batch_labels = train_labels_shuffled[model.batch_size*b: model.batch_size*(b+1)]
@@ -236,12 +236,18 @@ def main(args):
 
     ### Input Optimization ###
     if args.input_opt:
-        augment_fn = ImageDataGenerator(rotation_range=5,
-                        width_shift_range=0.2,
-                        height_shift_range=0.2,
-                        horizontal_flip=True,
-                        vertical_flip=False,
-                        fill_mode='reflect')
+        # augment_fn = ImageDataGenerator(rotation_range=5,
+        #                 width_shift_range=0.2,
+        #                 height_shift_range=0.2,
+        #                 horizontal_flip=True,
+        #                 vertical_flip=False,
+        #                 fill_mode='reflect')
+
+        augment_fn = tf.keras.Sequential([ 
+          tf.keras.layers.RandomZoom(height_factor = 0.2, width_factor = 0.2),
+          tf.keras.layers.RandomTranslation(height_factor = 0.2, width_factor = 0.2),
+          tf.keras.layers.RandomRotation(factor=(-0.125, 0.125))
+        ], name='sequential'),
                         
         opt_shape = model.num_classes, model.image_size, model.image_size, 3
 
@@ -259,6 +265,10 @@ def main(args):
         )
 
         input_opt_model.train(epochs=10, augment_fn=augment_fn)
+        imgs = input_opt_model.opt_imgs
+        imgs[0].save('../results/input_opt/ideal_inputs.gif', save_all=True, append_images=imgs[1:], loop=True, duration=200)
+        # IPython.display.Image(open('ideal_inputs.gif','rb').read())
+        
     
     print(model.loss_list)
     # Save graphs in results folder
