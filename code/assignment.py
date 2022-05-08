@@ -105,6 +105,12 @@ def visualize(title, list):
     plt.savefig('../results/' + title + "_" + timestamp + '.png')
     plt.close()
     
+def undo_preprocess(input):
+    img = tf.dtypes.cast(input, tf.float64)
+    img = tf.transpose(img, perm=[0,3,1,2])
+    img = tf.reshape(img, (128, 128, 3))
+    return img
+
 def view_autoencoder_results(inputs, model, num_classes, split):
     fig = plt.figure(figsize=(8, 8))
     
@@ -113,14 +119,21 @@ def view_autoencoder_results(inputs, model, num_classes, split):
     #original inputs
     print(inputs.shape)
     for i in range(1, num_classes+1):
-        # img = model.call(np.expand_dims(inputs[i*(1000-split)], axis=0))
-        img = inputs[i*(1000-split)]
-        img = tf.dtypes.cast(img, tf.float64)
-        img = np.expand_dims(img, axis=0)
-        img = tf.transpose(img, perm=[0,3,1,2])
-        img = tf.reshape(img, (128, 128, 3))
+        original_img = inputs[i*(1000-split)]
+        original_img = np.expand_dims(original_img, axis=0)
+        
+        ae_img = model.call(original_img)
+        ae_img = undo_preprocess(ae_img)
+        original_img = undo_preprocess(original_img)
+        
         fig.add_subplot(rows, columns, i)
-        plt.imshow(img)
+        plt.imshow(original_img)
+        
+        fig.add_subplot(rows, columns, i+columns)
+        plt.imshow(ae_img)
+        
+
+        
     timestamp = time.strftime("%Y%m%d_%H%M%S")
     plt.savefig('../results/ae_' + timestamp + '.png')
     plt.close()
