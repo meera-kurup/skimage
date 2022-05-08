@@ -64,8 +64,8 @@ class InputOptimizer(tf.keras.Model):
             # ax.imshow(out_numpy, vmin = -1, vmax = 1)
             # ax.imshow((out_numpy * 255).astype(np.uint8))
             out_numpy = np.clip(out_numpy, 0, 1)
-            # ax.imshow(out_numpy*255)
-            ax.imshow((out_numpy * 255).astype(np.uint8))
+            ax.imshow(out_numpy*255)
+            #ax.imshow((out_numpy * 255).astype(np.uint8))
             #ax.imshow(out_numpy)
             
         self.opt_imgs += [self.fig2img(fig)]
