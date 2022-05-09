@@ -59,6 +59,7 @@ class InputOptimizer(tf.keras.Model):
             ax.set_title(f'Ideal for {i}')
             out_numpy = outputs[i].numpy()
             # out_numpy = np.squeeze(outputs[i].numpy(), -1)
+            ax.imshow(out_numpy, cmap='hsv')
             #print(out_numpy)
             # print(out_numpy.shape)
             # ax.imshow(out_numpy, vmin = -1, vmax = 1)
@@ -71,7 +72,7 @@ class InputOptimizer(tf.keras.Model):
             # print("adjusted")
             # out_numpy = (out_numpy+1)/2
             # print(out_numpy)
-            ax.imshow(out_numpy*255, vmin = 0, vmax = 1)
+            # ax.imshow(out_numpy*255, vmin = 0, vmax = 1)
             
         self.opt_imgs += [self.fig2img(fig)]
         plt.close(fig)

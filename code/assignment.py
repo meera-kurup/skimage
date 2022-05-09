@@ -1,4 +1,5 @@
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
 import tensorflow as tf
 import numpy as np
 import sys
@@ -251,7 +252,7 @@ def main(args):
             RandomZoom(height_factor = 0.2, width_factor = 0.2),
             RandomTranslation(height_factor = 0.2, width_factor = 0.2),
             RandomRotation(factor=(-0.125, 0.125)),
-            RandomFlip()
+            RandomFlip('horizontal')
             ], name='sequential')
                         
         opt_shape = (model.num_classes, model.image_size, model.image_size, 3)
@@ -269,25 +270,26 @@ def main(args):
             run_eagerly = True
         )
 
-        # input_opt_model.train(epochs=50, augment_fn=augment_fn)
-        input_opt_model.train(epochs=args.num_epochs)
+        input_opt_model.train(epochs=args.num_epochs, augment_fn=augment_fn)
+        # input_opt_model.train(epochs=args.num_epochs)
         imgs = input_opt_model.opt_imgs
-        imgs[0].save('../results/input_opt/ideal_inputs.gif', save_all=True, append_images=imgs[1:], loop=True, duration=200)
+        timestamp = time.strftime("%Y%m%d_%H%M")
+        imgs[0].save('../results/input_opt/ideal_inputs' + timestamp + '.gif', save_all=True, append_images=imgs[1:], loop=True, duration=200)
+        print("Saved result as " + '../results/input_opt/ideal_inputs' + timestamp + '.gif')
         # IPython.display.Image(open('ideal_inputs.gif','rb').read())
         
     
-    print(model.loss_list)
     # Save graphs in results folder
-    if (not args.autoencoder) and (not args.input_opt):
+    if args.autoencoder:
+        visualize("ae_loss", model.loss_list)
+        view_autoencoder_results(test_inputs, model, num_classes, split)
+    elif not args.input_opt:
         visualize("loss", model.loss_list)
         visualize("accuracy", model.accuracy_list)
 
         # Test model (test if weights are saving)
         accuracy = test(model, test_inputs, test_labels)
         tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
-    else:
-        visualize("ae_loss", model.loss_list)
-        view_autoencoder_results(test_inputs, model, num_classes, split)
 
 if __name__ == '__main__':
     args = parseArguments()
