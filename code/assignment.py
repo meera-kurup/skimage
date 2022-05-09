@@ -275,7 +275,7 @@ def main(args):
         imgs = input_opt_model.opt_imgs
         timestamp = time.strftime("%Y%m%d_%H%M")
         imgs[0].save('../results/input_opt/ideal_inputs' + timestamp + '.gif', save_all=True, append_images=imgs[1:], loop=True, duration=200)
-        print("Saved result as " + '../results/input_opt/ideal_inputs' + timestamp + '.gif')
+        print("Saved result as " + '../results/input_opt/ideal_inputs_' + timestamp + '.gif')
         # IPython.display.Image(open('ideal_inputs.gif','rb').read())
         
     
