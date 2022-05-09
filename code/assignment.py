@@ -106,6 +106,7 @@ def visualize(title, list):
     plt.ylabel(title)
     timestamp = time.strftime("%Y%m%d_%H%M%S")
     plt.savefig('../results/' + title + "/" + title + "_" + timestamp + '.png')
+    print("Saved " + title + " in " + '../results/' + title + "/" + title + "_" + timestamp + '.png')
     plt.close()
     
 def undo_preprocess(input):
