@@ -270,7 +270,7 @@ def main(args):
         )
 
         # input_opt_model.train(epochs=50, augment_fn=augment_fn)
-        input_opt_model.train(epochs=50)
+        input_opt_model.train(epochs=args.num_epochs)
         imgs = input_opt_model.opt_imgs
         imgs[0].save('../results/input_opt/ideal_inputs.gif', save_all=True, append_images=imgs[1:], loop=True, duration=200)
         # IPython.display.Image(open('ideal_inputs.gif','rb').read())
