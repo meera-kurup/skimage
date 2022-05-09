@@ -69,7 +69,7 @@ class InputOptimizer(tf.keras.Model):
             print("raw")
             print(out_numpy)
             print("adjusted")
-            out_numpy = (out_numpy+255)/(255*2)
+            out_numpy = (out_numpy+1)/2
             print(out_numpy)
             ax.imshow(out_numpy, vmin = 0, vmax = 1)
             
