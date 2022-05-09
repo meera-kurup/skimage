@@ -278,7 +278,7 @@ def main(args):
     
     print(model.loss_list)
     # Save graphs in results folder
-    if not args.autoencoder:
+    if (not args.autoencoder) and (not args.input_opt):
         visualize("loss", model.loss_list)
         visualize("accuracy", model.accuracy_list)
 
