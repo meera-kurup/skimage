@@ -66,12 +66,12 @@ class InputOptimizer(tf.keras.Model):
             # out_numpy = np.clip(out_numpy/np.amax(out_numpy), 0, 1)
             # ax.imshow(out_numpy*255)
             #ax.imshow((out_numpy * 255).astype(np.uint8))
-            print("raw")
-            print(out_numpy)
-            print("adjusted")
-            out_numpy = (out_numpy+1)/2
-            print(out_numpy)
-            ax.imshow(out_numpy, vmin = 0, vmax = 1)
+            # print("raw")
+            # print(out_numpy)
+            # print("adjusted")
+            # out_numpy = (out_numpy+1)/2
+            # print(out_numpy)
+            ax.imshow(out_numpy*255, vmin = 0, vmax = 1)
             
         self.opt_imgs += [self.fig2img(fig)]
         plt.close(fig)
@@ -96,8 +96,9 @@ class InputOptimizer(tf.keras.Model):
               loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
             ## 2. Optimize with the output loss with respect to the *input*
             ##      HINT: gradient and apply_gradient expect a *list* of vars... 
-            gradients = tape.gradient(loss, [self.opt_input])
-            self.optimizer.apply_gradients(zip(gradients, [self.opt_input]))
+            print(self.opt_input.shape)
+            gradients = tape.gradient(loss, [self.opt_input[:,:,:,0],self.opt_input[:,:,:,1],self.opt_input[:,:,:,2]])
+            self.optimizer.apply_gradients(zip(gradients, [self.opt_input[:,:,:,0],self.opt_input[:,:,:,1],self.opt_input[:,:,:,2]]))
             self.compiled_metrics.update_state(y, y_pred)
             ## Augment the images and add them to the list of output pics
             self.add_input_to_imgs(augment_fn(self.opt_input))
