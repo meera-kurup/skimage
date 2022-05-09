@@ -1,9 +1,3 @@
-from autoencoder import Autoencoder
-from input_opt import InputOptimizer
-from keras.preprocessing.image import ImageDataGenerator
-from preprocess import get_data
-from model import Model
-from matplotlib import pyplot as plt
 import os
 import tensorflow as tf
 import numpy as np
@@ -12,6 +6,15 @@ import random
 import math
 import time
 import argparse
+
+from matplotlib.ft2font import HORIZONTAL
+from autoencoder import Autoencoder
+from input_opt import InputOptimizer
+from keras.preprocessing.image import ImageDataGenerator
+from keras.layers import RandomZoom, RandomTranslation, RandomRotation, RandomFlip
+from preprocess import get_data
+from model import Model
+from matplotlib import pyplot as plt
 
 def parseArguments():
     parser = argparse.ArgumentParser()
@@ -244,12 +247,13 @@ def main(args):
         #                 fill_mode='reflect')
 
         augment_fn = tf.keras.Sequential([ 
-          tf.keras.layers.RandomZoom(height_factor = 0.2, width_factor = 0.2),
-          tf.keras.layers.RandomTranslation(height_factor = 0.2, width_factor = 0.2),
-          tf.keras.layers.RandomRotation(factor=(-0.125, 0.125))
-        ], name='sequential'),
+            RandomZoom(height_factor = 0.2, width_factor = 0.2),
+            RandomTranslation(height_factor = 0.2, width_factor = 0.2),
+            RandomRotation(factor=(-0.125, 0.125)),
+            RandomFlip()
+            ], name='sequential')
                         
-        opt_shape = model.num_classes, model.image_size, model.image_size, 3
+        opt_shape = (model.num_classes, model.image_size, model.image_size, 3)
 
         input_opt_model = InputOptimizer(
             model, 
@@ -264,7 +268,8 @@ def main(args):
             run_eagerly = True
         )
 
-        input_opt_model.train(epochs=10, augment_fn=augment_fn)
+        # input_opt_model.train(epochs=10, augment_fn=augment_fn)
+        input_opt_model.train(epochs=10)
         imgs = input_opt_model.opt_imgs
         imgs[0].save('../results/input_opt/ideal_inputs.gif', save_all=True, append_images=imgs[1:], loop=True, duration=200)
         # IPython.display.Image(open('ideal_inputs.gif','rb').read())

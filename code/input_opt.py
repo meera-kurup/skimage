@@ -26,7 +26,7 @@ class InputOptimizer(tf.keras.Model):
         self.opt_shape = opt_shape ## 10x28x28x1 -> 5 x image_size x image_size x 1
         
         ## Set of optimizable inputs; 10 28x28 images initialized to 0.
-        self.opt_input = tf.Variable(tf.zeros(self.opt_shape))  
+        self.opt_input = tf.Variable(tf.zeros(self.opt_shape), dtype=np.float32)
         ## FIX THE VARIABLE INITIALIZATION (IF REQUIRED BY YOUR MODEL)
 
         ## Predictions to which our inputs are optimized for. nxn "eye"-dentity mtx
@@ -57,8 +57,17 @@ class InputOptimizer(tf.keras.Model):
         fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
         for i, ax in enumerate(axs.reshape(-1)):
             ax.set_title(f'Ideal for {i}')
-            out_numpy = np.squeeze(outputs[i].numpy(), -1)
-            ax.imshow(out_numpy, cmap='Greys')
+            out_numpy = outputs[i].numpy()
+            # out_numpy = np.squeeze(outputs[i].numpy(), -1)
+            #print(out_numpy)
+            # print(out_numpy.shape)
+            # ax.imshow(out_numpy, vmin = -1, vmax = 1)
+            # ax.imshow((out_numpy * 255).astype(np.uint8))
+            out_numpy = np.clip(out_numpy, 0, 1)
+            ax.imshow(out_numpy*255)
+            #ax.imshow((out_numpy * 255).astype(np.uint8))
+            #ax.imshow(out_numpy)
+            
         self.opt_imgs += [self.fig2img(fig)]
         plt.close(fig)
 
@@ -77,7 +86,8 @@ class InputOptimizer(tf.keras.Model):
             with tf.GradientTape() as tape:
               data = augment_fn(self.opt_input)
               y = self.opt_probs
-              y_pred = self.model(data, training = True)  # Forward pass
+              y_pred = self.model(data)  # Forward pass
+              #print(y_pred)
               loss = self.compiled_loss(y, y_pred, regularization_losses=self.losses)
             ## 2. Optimize with the output loss with respect to the *input*
             ##      HINT: gradient and apply_gradient expect a *list* of vars... 

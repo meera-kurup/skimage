@@ -50,27 +50,12 @@ def get_data(img_file, labels_file, image_size):
 	has size (num_examples, num_cl
 	num_classes = 0sses)
 	"""
-	# unpickled_file = unpickle(file_path)
-	# inputs = unpickled_file[b'data']
-	# inputs = [smart_resize(input_image, image_size) for input_image in inputs]
-	# # labels = unpickled_file[b'labels']
-	# labels = get_labels_from_folder_names()
-	print("Loading data...")
+	print("Loading data")
 	inputs = np.load(img_file, allow_pickle=True)
 	labels = np.load(labels_file, allow_pickle=True)
-	# print("Loading testing data...")
-	# test_inputs = np.load(test_img_file)
-	# test_labels = np.load(test_labels_file)
-	img = Image.fromarray(inputs[0], 'RGB')
-	img.show()
-	# Getting all labels that are for food images
-	# labels = np.array(labels)
 
-	# Reshape and transpose inputs
-	# inputs = tf.reshape(inputs, (-1, 3)) #, 32 ,32))
-	# inputs = tf.transpose(inputs, perm=[0,2,3,1])
 	img = Image.fromarray(inputs[0], 'RGB')
-	img.show()
+	#img.show()
 	# inputs = inputs/255
 	# test_inputs = np.float32(test_inputs/255)
 	# One-hot encoding for labels 
@@ -93,22 +78,8 @@ def get_data(img_file, labels_file, image_size):
 	processed_inputs = np.array(processed_inputs/255)
 	processed_inputs = tf.reshape(processed_inputs, (-1, 3, image_size, image_size))
 	processed_inputs = tf.transpose(processed_inputs, perm=[0,2,3,1])
-	print(processed_inputs.dtype)
+	#print(processed_inputs.dtype)
 	processed_inputs = tf.dtypes.cast(processed_inputs, tf.float32)
-
-	# first_class = 11
-	# second_class = 21
-	# train_labels = np.vectorize(label_dict.get)(train_labels)
-	# indicies_1 = np.nonzero(train_labels == first_class)
-	# indicies_2 = np.nonzero(train_labels == second_class)
-	# indicies = np.concatenate([indicies_1[0], indicies_2[0]])
-	# train_inputs = np.float32(train_inputs[indicies]/255)
-	# train_labels = train_labels[indicies]
-	# train_inputs = tf.reshape(train_inputs, (-1, 3, 299, 299))
-	# train_inputs = tf.transpose(train_inputs, perm=[0,2,3,1])
-	# train_labels = np.where(train_labels == first_class, 0, 1)
-
-	# labels = tf.one_hot(labels, num_classes)
 
 	# labels = tf.one_hot(np.vectorize(label_dict.get)(labels), num_classes)
 	# test_labels = tf.one_hot(np.vectorize(label_dict.get)(test_labels), num_classes)
