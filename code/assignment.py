@@ -262,7 +262,7 @@ def main(args):
         )
 
         input_opt_model.compile(
-            optimizer   = tf.keras.optimizers.Adam(learning_rate=0.001),
+            optimizer   = tf.keras.optimizers.Adam(learning_rate=0.05),
             loss        = tf.keras.losses.CategoricalCrossentropy(),
             metrics     = [tf.keras.metrics.CategoricalAccuracy()],
             run_eagerly = True
