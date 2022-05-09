@@ -105,7 +105,7 @@ def visualize(title, list):
     plt.xlabel('Batch')
     plt.ylabel(title)
     timestamp = time.strftime("%Y%m%d_%H%M%S")
-    plt.savefig('../results/' + title + "_" + timestamp + '.png')
+    plt.savefig('../results/' + title + "/" + title + "_" + timestamp + '.png')
     plt.close()
     
 def undo_preprocess(input):
@@ -138,7 +138,7 @@ def view_autoencoder_results(inputs, model, num_classes, split):
 
         
     timestamp = time.strftime("%Y%m%d_%H%M%S")
-    plt.savefig('../results/ae_' + timestamp + '.png')
+    plt.savefig('../results/ae/ae_' + timestamp + '.png')
     plt.close()
 
 def save_model_weights(model):
@@ -277,14 +277,15 @@ def main(args):
     
     print(model.loss_list)
     # Save graphs in results folder
-    visualize("loss", model.loss_list)
     if not args.autoencoder:
+        visualize("loss", model.loss_list)
         visualize("accuracy", model.accuracy_list)
 
         # Test model (test if weights are saving)
         accuracy = test(model, test_inputs, test_labels)
         tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
     else:
+        visualize("ae_loss", model.loss_list)
         view_autoencoder_results(test_inputs, model, num_classes, split)
 
 if __name__ == '__main__':
