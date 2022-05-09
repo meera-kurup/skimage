@@ -262,14 +262,14 @@ def main(args):
         )
 
         input_opt_model.compile(
-            optimizer   = tf.keras.optimizers.Adam(learning_rate=0.01),
+            optimizer   = tf.keras.optimizers.Adam(learning_rate=0.1),
             loss        = tf.keras.losses.CategoricalCrossentropy(),
             metrics     = [tf.keras.metrics.CategoricalAccuracy()],
             run_eagerly = True
         )
 
-        # input_opt_model.train(epochs=10, augment_fn=augment_fn)
-        input_opt_model.train(epochs=70)
+        input_opt_model.train(epochs=10, augment_fn=augment_fn)
+        # input_opt_model.train(epochs=30)
         imgs = input_opt_model.opt_imgs
         imgs[0].save('../results/input_opt/ideal_inputs.gif', save_all=True, append_images=imgs[1:], loop=True, duration=200)
         # IPython.display.Image(open('ideal_inputs.gif','rb').read())
