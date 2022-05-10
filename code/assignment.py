@@ -1,4 +1,5 @@
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' 
 import tensorflow as tf
 import numpy as np
 import sys
@@ -105,7 +106,8 @@ def visualize(title, list):
     plt.xlabel('Batch')
     plt.ylabel(title)
     timestamp = time.strftime("%Y%m%d_%H%M%S")
-    plt.savefig('../results/' + title + "_" + timestamp + '.png')
+    plt.savefig('../results/' + title + "/" + title + "_" + timestamp + '.png')
+    print("Saved " + title + " in " + '../results/' + title + "/" + title + "_" + timestamp + '.png')
     plt.close()
     
 def undo_preprocess(input):
@@ -138,7 +140,7 @@ def view_autoencoder_results(inputs, model, num_classes, split):
 
         
     timestamp = time.strftime("%Y%m%d_%H%M%S")
-    plt.savefig('../results/ae_' + timestamp + '.png')
+    plt.savefig('../results/ae/ae_' + timestamp + '.png')
     plt.close()
 
 def save_model_weights(model):
@@ -247,10 +249,10 @@ def main(args):
         #                 fill_mode='reflect')
 
         augment_fn = tf.keras.Sequential([ 
-            RandomZoom(height_factor = 0.2, width_factor = 0.2),
-            RandomTranslation(height_factor = 0.2, width_factor = 0.2),
-            RandomRotation(factor=(-0.125, 0.125)),
-            RandomFlip()
+            RandomZoom(height_factor = 0.01, width_factor = 0.01),
+            RandomTranslation(height_factor = 0.05, width_factor = 0.05),
+            RandomRotation(factor=(-0.05, 0.05)),
+            RandomFlip('horizontal')
             ], name='sequential')
                         
         opt_shape = (model.num_classes, model.image_size, model.image_size, 3)
@@ -262,30 +264,32 @@ def main(args):
         )
 
         input_opt_model.compile(
-            optimizer   = tf.keras.optimizers.Adam(learning_rate=0.01),
+            optimizer   = tf.keras.optimizers.Adam(learning_rate=0.05),
             loss        = tf.keras.losses.CategoricalCrossentropy(),
             metrics     = [tf.keras.metrics.CategoricalAccuracy()],
             run_eagerly = True
         )
 
-        # input_opt_model.train(epochs=10, augment_fn=augment_fn)
-        input_opt_model.train(epochs=10)
+        input_opt_model.train(epochs=args.num_epochs, augment_fn=augment_fn)
+        # input_opt_model.train(epochs=args.num_epochs)
         imgs = input_opt_model.opt_imgs
-        imgs[0].save('../results/input_opt/ideal_inputs.gif', save_all=True, append_images=imgs[1:], loop=True, duration=200)
+        timestamp = time.strftime("%Y%m%d_%H%M")
+        imgs[0].save('../results/input_opt/ideal_inputs_' + timestamp + '.gif', save_all=True, append_images=imgs[1:], loop=True, duration=200)
+        print("Saved result as " + '../results/input_opt/ideal_inputs_' + timestamp + '.gif')
         # IPython.display.Image(open('ideal_inputs.gif','rb').read())
         
     
-    print(model.loss_list)
     # Save graphs in results folder
-    visualize("loss", model.loss_list)
-    if not args.autoencoder:
+    if args.autoencoder:
+        visualize("ae_loss", model.loss_list)
+        view_autoencoder_results(test_inputs, model, num_classes, split)
+    elif not args.input_opt:
+        visualize("loss", model.loss_list)
         visualize("accuracy", model.accuracy_list)
 
         # Test model (test if weights are saving)
         accuracy = test(model, test_inputs, test_labels)
         tf.print("Model Test Average Accuracy: " + str(accuracy.numpy()))
-    else:
-        view_autoencoder_results(test_inputs, model, num_classes, split)
 
 if __name__ == '__main__':
     args = parseArguments()
