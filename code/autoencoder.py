@@ -46,7 +46,7 @@ class Autoencoder(tf.keras.Model):
         # noise_shift = rand_fn(tf.shape(x), *shift, dtype=tf.float32)
 
         # return tf.clip_by_value(x*noise_scale + noise_shift, 0, 1)
-        sample = GaussianNoise(0.1)
+        sample = GaussianNoise(0.05)
         return sample(x, training=True)
 
     @tf.function
