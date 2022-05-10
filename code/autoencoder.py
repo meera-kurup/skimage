@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from keras.layers import Dense, Dropout, Flatten, Conv2D,  MaxPooling2D, GlobalAveragePooling2D, BatchNormalization, AveragePooling2D, Input, Conv2DTranspose
+from keras.layers import Dense, Dropout, Flatten, Conv2D,  MaxPooling2D, GlobalAveragePooling2D, BatchNormalization, AveragePooling2D, Input, Conv2DTranspose, GaussianNoise
 from keras.applications.inception_v3 import InceptionV3
 from keras.regularizers import l2
 
@@ -40,12 +40,14 @@ class Autoencoder(tf.keras.Model):
         when rand_fn = uniform : scale/shift are minval, maxval
         when rand_fn = normal  : scale/shift are mean, std dev
         '''
-        assert len(shift) == len(scale) == len(clip) == 2, "range arguments must be pairs of len 2"
+        # assert len(shift) == len(scale) == len(clip) == 2, "range arguments must be pairs of len 2"
         
-        noise_scale = rand_fn(tf.shape(x), *scale, dtype=tf.float32)  
-        noise_shift = rand_fn(tf.shape(x), *shift, dtype=tf.float32)
+        # noise_scale = rand_fn(tf.shape(x), *scale, dtype=tf.float32)  
+        # noise_shift = rand_fn(tf.shape(x), *shift, dtype=tf.float32)
 
-        return tf.clip_by_value(x*noise_scale + noise_shift, 0, 1)
+        # return tf.clip_by_value(x*noise_scale + noise_shift, 0, 1)
+        sample = GaussianNoise(0.2)
+        return sample(x, training=True)
 
     @tf.function
     def call(self, inputs):
