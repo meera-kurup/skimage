@@ -26,9 +26,30 @@ class Autoencoder(tf.keras.Model):
             Conv2DTranspose(64, kernel_size=(3, 3), activation='relu'),
             # MaxUnpooling2D(pool_size=(2, 2)),
             Conv2DTranspose(3, kernel_size=(3, 3), activation='relu')])
+        
+    def noiser(self, x, scale=(1,1), shift=(0,0), clip=(0,1), rand_fn=tf.random.uniform):
+        '''
+        Adds noise scale and offset and clips results.
+        Default params lead to identify function with clipping to [0, 1]
+
+        - scale   : positional args to rand_fn for multiplicative component
+        - shift   : positional args to rand_fn for additive component
+        - clip    : range of ourput values to clip to
+        - rand_fn : random function to use (tf.random.<function>)
+
+        when rand_fn = uniform : scale/shift are minval, maxval
+        when rand_fn = normal  : scale/shift are mean, std dev
+        '''
+        assert len(shift) == len(scale) == len(clip) == 2, "range arguments must be pairs of len 2"
+        
+        noise_scale = rand_fn(tf.shape(x), *scale, dtype=tf.float32)  
+        noise_shift = rand_fn(tf.shape(x), *shift, dtype=tf.float32)
+
+        return tf.clip_by_value(x*noise_scale + noise_shift, 0, 1)
 
     @tf.function
     def call(self, inputs):
+        inputs = self.noiser(inputs)
         encoded_inputs = self.encoder(inputs)
         decoded_inputs = self.decoder(encoded_inputs)
         return decoded_inputs
@@ -38,3 +59,4 @@ class Autoencoder(tf.keras.Model):
         bce_loss = tf.keras.losses.BinaryCrossentropy(from_logits=True)
         
         return ((1-alpha)*mse_loss(labels, pred) + alpha*bce_loss(labels, pred))
+    

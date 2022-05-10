@@ -21,7 +21,7 @@ def parseArguments():
     parser.add_argument("--autoencoder", action="store_true")
     parser.add_argument("--input_opt", action="store_true")
     parser.add_argument("--learning_rate", type=float, default=1e-3)
-    parser.add_argument("--num_epochs", type=int, default=50)
+    parser.add_argument("--num_epochs", type=int, default=1)
     parser.add_argument("--weights", default=None, help='''Path to model weights file (should end with the extension .h5).''')
     args = parser.parse_args()
     return args
@@ -127,7 +127,7 @@ def view_autoencoder_results(inputs, model, num_classes, split):
         
         ae_img = model.call(original_img)
         ae_img = undo_preprocess(ae_img)
-        original_img = undo_preprocess(original_img)
+        original_img = undo_preprocess(model.noiser(original_img))
         
         fig.add_subplot(rows, columns, i)
         plt.imshow(original_img)
