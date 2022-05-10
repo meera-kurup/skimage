@@ -249,9 +249,9 @@ def main(args):
         #                 fill_mode='reflect')
 
         augment_fn = tf.keras.Sequential([ 
-            RandomZoom(height_factor = 0.2, width_factor = 0.2),
-            RandomTranslation(height_factor = 0.2, width_factor = 0.2),
-            RandomRotation(factor=(-0.125, 0.125)),
+            RandomZoom(height_factor = 0.01, width_factor = 0.01),
+            RandomTranslation(height_factor = 0.05, width_factor = 0.05),
+            RandomRotation(factor=(-0.05, 0.05)),
             RandomFlip('horizontal')
             ], name='sequential')
                         
@@ -274,7 +274,7 @@ def main(args):
         # input_opt_model.train(epochs=args.num_epochs)
         imgs = input_opt_model.opt_imgs
         timestamp = time.strftime("%Y%m%d_%H%M")
-        imgs[0].save('../results/input_opt/ideal_inputs' + timestamp + '.gif', save_all=True, append_images=imgs[1:], loop=True, duration=200)
+        imgs[0].save('../results/input_opt/ideal_inputs_' + timestamp + '.gif', save_all=True, append_images=imgs[1:], loop=True, duration=200)
         print("Saved result as " + '../results/input_opt/ideal_inputs_' + timestamp + '.gif')
         # IPython.display.Image(open('ideal_inputs.gif','rb').read())
         

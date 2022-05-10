@@ -26,7 +26,7 @@ class InputOptimizer(tf.keras.Model):
         self.opt_shape = opt_shape ## 10x28x28x1 -> 5 x image_size x image_size x 1
         
         ## Set of optimizable inputs; 10 28x28 images initialized to 0.
-        self.opt_input = tf.Variable(tf.zeros(self.opt_shape), dtype=np.float32)
+        self.opt_input = tf.Variable(tf.random.normal(self.opt_shape, mean=0.5, stddev=0.2), dtype=np.float32)
         ## FIX THE VARIABLE INITIALIZATION (IF REQUIRED BY YOUR MODEL)
 
         ## Predictions to which our inputs are optimized for. nxn "eye"-dentity mtx
@@ -62,7 +62,7 @@ class InputOptimizer(tf.keras.Model):
             ax.imshow(out_numpy, cmap='hsv')
             #print(out_numpy)
             # print(out_numpy.shape)
-            # ax.imshow(out_numpy, vmin = -1, vmax = 1)
+            # ax.imshow(out_numpy, vmin = 0, vmax = 1)
             # ax.imshow((out_numpy * 255).astype(np.uint8))
             # out_numpy = np.clip(out_numpy/np.amax(out_numpy), 0, 1)
             # ax.imshow(out_numpy*255)
@@ -99,6 +99,7 @@ class InputOptimizer(tf.keras.Model):
             ##      HINT: gradient and apply_gradient expect a *list* of vars... 
             #print(self.opt_input.shape)
             gradients = tape.gradient(loss, [self.opt_input])
+            # gradients = [(tf.clip_by_value(grad, clip_value_min=0, clip_value_max=1.0)) for grad in gradients]
             self.optimizer.apply_gradients(zip(gradients, [self.opt_input]))
             self.compiled_metrics.update_state(y, y_pred)
             ## Augment the images and add them to the list of output pics
