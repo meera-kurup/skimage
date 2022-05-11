@@ -1,6 +1,6 @@
 import numpy as np
 import tensorflow as tf
-from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPool2D, GlobalAveragePooling2D, BatchNormalization, AveragePooling2D, Input
+from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D, GlobalAveragePooling2D, BatchNormalization, AveragePooling2D, Input
 from keras.applications.inception_v3 import InceptionV3
 from keras.regularizers import l2
 
@@ -72,14 +72,14 @@ class Model(tf.keras.Model):
         #     Dense(self.num_classes, activation="softmax", kernel_regularizer=l2()),
         # ])
         self.cnn = tf.keras.Sequential()
-        self.cnn.add(tf.keras.layers.Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(self.image_size,self.image_size,3)))
-        self.cnn.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
-        self.cnn.add(tf.keras.layers.Conv2D(64, kernel_size=(3, 3), activation='relu'))
-        self.cnn.add(tf.keras.layers.MaxPooling2D(pool_size=(2, 2)))
-        self.cnn.add(tf.keras.layers.Flatten())
-        self.cnn.add(tf.keras.layers.Dense(64, activation='relu'))
-        self.cnn.add(tf.keras.layers.Dense(32, activation='relu'))
-        self.cnn.add(tf.keras.layers.Dense(self.num_classes, activation='softmax'))
+        self.cnn.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(self.image_size,self.image_size,3)))
+        self.cnn.add(MaxPooling2D(pool_size=(2, 2)))
+        self.cnn.add(Conv2D(64, kernel_size=(3, 3), activation='relu'))
+        self.cnn.add(MaxPooling2D(pool_size=(2, 2)))
+        self.cnn.add(Flatten())
+        self.cnn.add(Dense(64, activation='relu'))
+        self.cnn.add(Dense(32, activation='relu'))
+        self.cnn.add(Dense(self.num_classes, activation='softmax'))
 
     @tf.function
     def call(self, input):

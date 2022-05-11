@@ -94,6 +94,7 @@ def test(model, test_inputs, test_labels):
 def visualize(title, list): 
     """
     Uses Matplotlib to visualize the loss/accuracy of our model.
+    
     :param title: type of data to visualize
     :param list: list of data stored from train.
 
@@ -111,17 +112,33 @@ def visualize(title, list):
     plt.close()
     
 def undo_preprocess(input):
+    """
+    Undos image manipulation done in preprocessing to revert back to a standard RGB image.
+    
+    :param input: preprocessed inputs
+    
+    :return: RGB image
+    """
     img = tf.dtypes.cast(input, tf.float64)
     img = tf.transpose(img, perm=[0,3,1,2])
     img = tf.reshape(img, (128, 128, 3))
     return img
 
 def view_autoencoder_results(inputs, model, num_classes, split):
+    """
+    Displays the orignal inputs and outputs of the trained autoencoder
+
+    :param inputs: preprocessed inputs
+    :param model: autoencoder model
+    :param num_classes: numnber of classes
+    :param split: train-test split quantity
+
+    :return: RGB image
+    """
     fig = plt.figure(figsize=(8, 8))
     
     rows = 2
     columns = num_classes
-    #original inputs
     print(inputs.shape)
     for i in range(1, num_classes+1):
         original_img = inputs[i*(1000-split)-1]
@@ -131,14 +148,15 @@ def view_autoencoder_results(inputs, model, num_classes, split):
         ae_img = undo_preprocess(ae_img)
         original_img = undo_preprocess(model.noiser(original_img))
         
+        # add original inputs
         fig.add_subplot(rows, columns, i)
         plt.imshow(original_img)
         
+        # add autoencoder outputs
         fig.add_subplot(rows, columns, i+columns)
         plt.imshow(ae_img)
         
-
-        
+    # save graph
     timestamp = time.strftime("%Y%m%d_%H%M%S")
     plt.savefig('../results/ae/ae_' + timestamp + '.png')
     plt.close()
@@ -219,12 +237,14 @@ def main(args):
         for e in range(epochs):
             print("Epoch: " + str(e+1) + "/" + str(epochs))
             train(model, train_inputs, train_labels)
-    # autoencoder.build(input_shape = (64, 128, 128, 3)) 
-    # autoencoder.summary()
-    # autoencoder.encoder.summary()
-    # autoencoder.decoder.summary()
     else:
+    ### CNN ###
         model = Model(num_classes, image_size)
+        
+        # Modify train inputs to denoise via trained autoencoder
+        # ae_model = Autoencoder(image_size)
+        # train_inputs = ae_model.call(train_inputs)
+        
         if args.weights is None:
             # Train model
             epochs = args.num_epochs
