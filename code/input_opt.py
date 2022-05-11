@@ -111,30 +111,3 @@ class InputOptimizer(tf.keras.Model):
             pbar.set_description(f'Epoch {e+1}/{epochs}: Accuracy {acc}\t')
                 
         return out
-
-
-## TODO: Augmentation pipeline to zooms and translates the images
-# augment_fn = tf.keras.Sequential([ 
-#           tf.keras.layers.RandomZoom(height_factor = 0.2, width_factor = 0.2),
-#           tf.keras.layers.RandomTranslation(height_factor = 0.2, width_factor = 0.2)
-    
-# ], name='sequential')
-
-
-# augment_fn = ImageDataGenerator(featurewise_center=False,
-#                  samplewise_center=False,
-#                  featurewise_std_normalization=False,
-#                  samplewise_std_normalization=False,
-#                  zca_whitening=False,
-#                  rotation_range=5,
-#                  width_shift_range=0.05,
-#                  height_shift_range=0.05,
-#                  shear_range=0.2,
-#                  zoom_range=0.2,
-#                  channel_shift_range=0.,
-#                  fill_mode='nearest',
-#                  cval=0.,
-#                  horizontal_flip=True,
-#                  vertical_flip=False,
-#                  rescale=1/255) #rescale to [0-1], add zoom range of 0.2x and horizontal flip
-
