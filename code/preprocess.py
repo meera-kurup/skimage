@@ -1,54 +1,19 @@
 import numpy as np
 import tensorflow as tf
 from PIL import Image
-# May need more functions for preprocessing 
-
-# def smart_resize(input_image, new_size):
-# 	"""
-# 	Resizes and crops given image to a square with a width of new_size
-# 	"""
-# 	width = input_image.width
-# 	height = input_image.height
-
-# 	# Image is portrait or square
-# 	if height >= width:
-# 		crop_box = (0, (height-width)//2, width, (height-width)//2 + width)
-# 		return input_image.resize(size = (new_size,new_size),box = crop_box)
-
-# 	# Image is landscape
-# 	if width > height:
-# 		crop_box = ((width-height)//2, 0, (width-height)//2 + height, height)
-# 		return input_image.resize(size = (new_size,new_size),box = crop_box)
-
-# def get_labels_from_folder_names():
-# 	"""
-# 	Extracts all the label names from the image folder names 
-# 	"""
-# 	root='./../data/'
-# 	labels = [ item for item in os.listdir(root) if os.path.isdir(os.path.join(root, item)) ]
-# 	return labels
 
 def get_data(img_file, labels_file, image_size):
 	"""
 	Given a file path and two target classes, returns an array of 
 	normalized inputs (images) and an array of labels. 
-	You will want to first extract only the data that matches the 
-	corresponding classes we want (there are 10 classes and we only want 2).
-	You should make sure to normalize all inputs and also turn the labels
+	Extract only the data that matches the corresponding classes
+	(there are 101 classes and we only want 5).
+	Normalizes all inputs and also turns the labels
 	into one hot vectors using tf.one_hot().
-	# Note that because you are using tf.one_hot() for your labels, your
-	# labels will be a Tensor, while your inputs will be a NumPy array. This 
-	# is fine because TensorFlow works with NumPy arrays.
-	:param file_path: file path for inputs and labels, something 
-	# like 'CIFAR_data_compressed/train'
-	# :param first_class:  an integer (0-9) representing the first target
-	# class in the CIFAR10 dataset, for a cat, this would be a 3
-	:param first_class:  an integer (0-9) representing the second target
-	class in the CIFAR10 dataset, for a dog, this would be a 5
-	:return: normalized NumPy array of inputs and tensor of labels, where 
-	inputs are of type np.float32 and has size (num_inputs, width, height, num_channels) and labels 
-	has size (num_examples, num_cl
-	num_classes = 0sses)
+	
+	:param img_file: file path for inputs
+	:param labels_file: file path for labels
+	:param image_size: size of each input image
 	"""
 	print("Loading data")
 	inputs = np.load(img_file, allow_pickle=True)
@@ -58,6 +23,7 @@ def get_data(img_file, labels_file, image_size):
 	#img.show()
 	# inputs = inputs/255
 	# test_inputs = np.float32(test_inputs/255)
+
 	# One-hot encoding for labels 
 	d_str = np.unique(labels)
 	# label_dict = dict(enumerate(d_str.flatten(), 0))
@@ -65,6 +31,7 @@ def get_data(img_file, labels_file, image_size):
 
 	# num_classes = len(label_dict)
 
+	# Only process 5 classes
 	labels = np.vectorize(label_dict.get)(labels)
 	processed_labels = labels[((labels == 0) | (labels == 1)) | (labels == 2) | (labels == 3) | (labels == 4)]
 	temp_labels = np.where(processed_labels == 1, 1, 0)
