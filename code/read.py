@@ -2,6 +2,8 @@ import os
 from PIL import Image
 import numpy as np
 
+### THIS IS A SCRIPT FOR READING IMAGES FROM DATASET ###
+
 labels = []
 images = []
 food_list = ["sashimi", "baklava", "ramen", "edamame", "chocolate_cake"]
