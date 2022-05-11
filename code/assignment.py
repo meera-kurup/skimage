@@ -29,17 +29,15 @@ def parseArguments():
 
 def train(model, train_inputs, train_labels):
     '''
-    Trains the model on all of the inputs and labels for one epoch. You should shuffle your inputs 
-    and labels - ensure that they are shuffled in the same order using tf.gather or zipping.
-    To increase accuracy, you may want to use tf.image.random_flip_left_right on your
-    inputs before doing the forward pass. You should batch your inputs.
+    Trains the model on all of the inputs and labels for one epoch. Inputs 
+    and labels are shuffled in the same order using tf.gather.
     
     :param model: the initialized model to use for the forward pass and backward pass
     :param train_inputs: train inputs (all inputs to use for training), 
     shape (num_inputs, width, height, num_channels)
     :param train_labels: train labels (all labels to use for training), 
     shape (num_labels, num_classes)
-    :return: Optionally list of losses per batch to use for visualize_loss
+    :return: List of losses to use for visualize_loss
     '''
 
     # train_inputs = tf.image.random_flip_left_right(train_inputs)
@@ -48,11 +46,13 @@ def train(model, train_inputs, train_labels):
     train_labels_shuffled = tf.gather(train_labels, indicies)
     num_batches = int(len(train_inputs)/model.batch_size)
 
+    # Iterate through batches
     for b in range(num_batches):
         batch_inputs = train_inputs_shuffled[model.batch_size*b: model.batch_size*(b+1)]
         batch_inputs = tf.image.random_flip_left_right(batch_inputs)
         batch_labels = train_labels_shuffled[model.batch_size*b: model.batch_size*(b+1)]
 
+        # Gradients
         with tf.GradientTape() as tape:
             y_pred = model.call(batch_inputs)
             if args.autoencoder:
@@ -66,20 +66,21 @@ def train(model, train_inputs, train_labels):
                 
             model.loss_list.append(loss.numpy())
 
+        # Print losses and accuracy (if not the autoencoder) every 50 batches
         if b % 50 == 0:
             print("Loss after {} training steps: {}".format(b, loss))
             if not args.autoencoder:
                 print("Accuracy after {} training steps: {}".format(b, accuracy))
+        
+        # Train on gradients
         gradients = tape.gradient(loss, model.trainable_variables)
         model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
-    print("Loss list", model.loss_list)
     return model.loss_list
 
 def test(model, test_inputs, test_labels):
     """
-    Tests the model on the test inputs and labels. You should NOT randomly 
-    flip images or do any extra preprocessing.
+    Tests the model on the test inputs and labels.
     
     :param test_inputs: test data (all images to be tested), 
     shape (num_inputs, width, height, num_channels)
@@ -167,7 +168,6 @@ def save_model_weights(model):
 
         Inputs:
         - model: Trained model.
-        - args: All arguments.
         """
         output_dir = os.path.join("../model_ckpts")
         timestamp = time.strftime("%Y%m%d_%H%M%S")
@@ -261,13 +261,7 @@ def main(args):
 
     ### Input Optimization ###
     if args.input_opt:
-        # augment_fn = ImageDataGenerator(rotation_range=5,
-        #                 width_shift_range=0.2,
-        #                 height_shift_range=0.2,
-        #                 horizontal_flip=True,
-        #                 vertical_flip=False,
-        #                 fill_mode='reflect')
-
+        # Augment function
         augment_fn = tf.keras.Sequential([ 
             RandomZoom(height_factor = 0.01, width_factor = 0.01),
             RandomTranslation(height_factor = 0.05, width_factor = 0.05),
