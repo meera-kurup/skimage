@@ -71,6 +71,7 @@ class Model(tf.keras.Model):
         #     Dropout(0.2),
         #     Dense(self.num_classes, activation="softmax", kernel_regularizer=l2()),
         # ])
+        
         self.cnn = tf.keras.Sequential()
         self.cnn.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(self.image_size,self.image_size,3)))
         self.cnn.add(MaxPooling2D(pool_size=(2, 2)))
