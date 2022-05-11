@@ -2,7 +2,7 @@
 
 SKIMage: Cleverly Classifying Culinary Cuisines
 
-Devpost: https://devpost.com/software/creatively-captioning-culinary-cuisines
+Devpost: [Cleverly Classifying Culinary Cuisines](https://devpost.com/software/creatively-captioning-culinary-cuisines)
 
 # Model Architecture
 
